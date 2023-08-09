@@ -56,8 +56,12 @@ namespace Nucleus.DeveloperTools.Analyzers
 
 
     private const string MANIFEST_COMPONENTS_ELEMENT_NAME = "components";
+    private const string MANIFEST_COMPONENT_ELEMENT_NAME = "component";
 
-    public static readonly ImmutableArray<DiagnosticDescriptor> Messages = ImmutableArray.Create
+    private const string MANIFEST_FOLDER_ELEMENT_NAME = "folder";
+    private const string MANIFEST_FILE_ELEMENT_NAME = "file";
+
+    public static readonly ImmutableArray<DiagnosticDescriptor> MESSAGES = ImmutableArray.Create
     (
       DiagnosticMessages.MANIFEST_PACKAGE_ID_EMPTY,
       DiagnosticMessages.MANIFEST_PACKAGE_ID_INVALID,
@@ -65,22 +69,27 @@ namespace Nucleus.DeveloperTools.Analyzers
       DiagnosticMessages.MANIFEST_PACKAGE_VERSION_EMPTY,
       DiagnosticMessages.MANIFEST_PACKAGE_VERSION_INVALID,
 
-      DiagnosticMessages.MANIFEST_COMPATIBILITY_MINVERSION_TOOLOW
+      DiagnosticMessages.MANIFEST_COMPATIBILITY_MINVERSION_TOOLOW,
+
+      DiagnosticMessages.MANIFEST_PACKAGE_NO_COMPONENTS_ELEMENT,
+      DiagnosticMessages.MANIFEST_PACKAGE_NO_COMPONENT_ELEMENTS,
+
+      DiagnosticMessages.MANIFEST_PACKAGE_FILE_NOT_FOUND
     );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
     {
       get
       {
-        return Messages;
+        return MESSAGES;
       }
-    }    
+    }
 
     public override void Initialize(AnalysisContext context)
     {
       context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
       context.EnableConcurrentExecution();
-
+      
       context.RegisterCompilationAction(AnalyzeManifest);
     }
 
@@ -100,19 +109,20 @@ namespace Nucleus.DeveloperTools.Analyzers
       List<Diagnostic> results = new List<Diagnostic>();
 
       Models.Manifest manifest = ReadManifest(context.Options.AdditionalFiles, context.CancellationToken);
-            
+      
       if (manifest.IsValid)
       {
         results.AddRange(AnalyzeManifestMinVersion(context.Compilation.ReferencedAssemblyNames, manifest));
         results.AddRange(AnalyzeManifestPackageId(manifest));
         results.AddRange(AnalyzeManifestPackageName(manifest));
         results.AddRange(AnalyzeManifestPackageVersion(manifest));
+        results.AddRange(AnalyzeManifestComponents(manifest));
       }
-    
+
       foreach (Diagnostic result in results)
       {
         context.ReportDiagnostic(result);
-      }      
+      }
     }
 
     /// <summary>
@@ -186,7 +196,7 @@ namespace Nucleus.DeveloperTools.Analyzers
               Diagnostic.Create
               (
                 DiagnosticMessages.MANIFEST_COMPATIBILITY_MINVERSION_TOOLOW,
-                Location.Create(manifest.Path, new TextSpan(), BuildLinePositionSpan(minVersionAttribute,MANIFEST_COMPATIBILITY_ELEMENT_MINVERSION_ATTRIBUTE)),
+                Location.Create(manifest.Path, new TextSpan(), BuildLinePositionSpan(minVersionAttribute, MANIFEST_COMPATIBILITY_ELEMENT_MINVERSION_ATTRIBUTE)),
                 reference.Name,
                 reference.Version,
                 minVersion
@@ -214,7 +224,7 @@ namespace Nucleus.DeveloperTools.Analyzers
       if (packageElement != null)
       {
         XAttribute packageIdAttribute = packageElement.Attribute(MANIFEST_PACKAGE_ID_ATTRIBUTE);
-       
+
         if (String.IsNullOrEmpty(packageIdAttribute?.Value))
         {
           results.Add
@@ -225,7 +235,7 @@ namespace Nucleus.DeveloperTools.Analyzers
               Location.Create(manifest.Path, new TextSpan(), BuildLinePositionSpan(packageIdAttribute, MANIFEST_PACKAGE_ID_ATTRIBUTE))
             )
           );
-        }        
+        }
         else if (!Guid.TryParse(packageIdAttribute.Value, out Guid _))
         {
           results.Add
@@ -257,8 +267,8 @@ namespace Nucleus.DeveloperTools.Analyzers
       if (packageElement != null)
       {
         XElement packageNameElement = packageElement.Element(manifest.PackageDocument.Root.Name.Namespace + MANIFEST_PACKAGE_NAME_ELEMENT);
-      
-        if (String.IsNullOrEmpty(packageNameElement?.Value))
+
+        if (String.IsNullOrWhiteSpace(packageNameElement?.Value))
         {
           results.Add
           (
@@ -290,7 +300,7 @@ namespace Nucleus.DeveloperTools.Analyzers
       {
         XElement packageVersionElement = packageElement.Element(manifest.PackageDocument.Root.Name.Namespace + MANIFEST_PACKAGE_VERSION_ELEMENT);
 
-        if (String.IsNullOrEmpty(packageVersionElement?.Value))
+        if (String.IsNullOrWhiteSpace(packageVersionElement?.Value))
         {
           results.Add
           (
@@ -311,6 +321,101 @@ namespace Nucleus.DeveloperTools.Analyzers
               Location.Create(manifest.Path, new TextSpan(), BuildLinePositionSpan(packageVersionElement, MANIFEST_PACKAGE_VERSION_ELEMENT))
             )
           );
+        }
+      }
+
+      return results;
+    }
+
+    /// <summary>
+    /// Check the manifest for an empty version.
+    /// </summary>
+    /// <param name="references"></param>
+    /// <param name="manifest"></param>
+    /// <returns></returns>
+    private static List<Diagnostic> AnalyzeManifestComponents(Models.Manifest manifest)
+    {
+      List<Diagnostic> results = new List<Diagnostic>();
+
+      XElement packageElement = manifest.PackageDocument.Root;
+
+      if (packageElement != null)
+      {
+        XElement componentsElement = packageElement.Element(manifest.PackageDocument.Root.Name.Namespace + MANIFEST_COMPONENTS_ELEMENT_NAME);
+
+        if (componentsElement == null)
+        {
+          results.Add
+          (
+            Diagnostic.Create
+            (
+              DiagnosticMessages.MANIFEST_PACKAGE_NO_COMPONENTS_ELEMENT,
+              Location.Create(manifest.Path, new TextSpan(), new LinePositionSpan())
+            )
+          );
+        }
+        else
+        {
+          IEnumerable<XElement> components = componentsElement.Descendants(manifest.PackageDocument.Root.Name.Namespace + MANIFEST_COMPONENT_ELEMENT_NAME);
+
+          if (!components.Any())
+          {
+            results.Add
+            (
+              Diagnostic.Create
+              (
+                DiagnosticMessages.MANIFEST_PACKAGE_NO_COMPONENT_ELEMENTS,
+                Location.Create(manifest.Path, new TextSpan(), BuildLinePositionSpan(componentsElement, MANIFEST_COMPONENTS_ELEMENT_NAME))
+              )
+            );
+          }
+          else
+          {
+            // check that files exist
+            foreach (XElement component in components)
+            {
+              string rootPath = System.IO.Path.GetDirectoryName(manifest.Path);
+              results.AddRange(CheckFileExists(manifest.PackageDocument.Root.Name.Namespace, component, manifest.Path, rootPath));
+            }
+          }
+        }
+      }
+
+      return results;
+    }
+
+    private static List<Diagnostic> CheckFileExists(XNamespace ns, XElement parentElement, string manifestPath, string path)
+    {
+      List<Diagnostic> results = new List<Diagnostic>();
+     
+      foreach (XElement fileElement in parentElement.Elements(ns + MANIFEST_FILE_ELEMENT_NAME))
+      {
+        string fileName = $"{path}\\{fileElement.Attribute("name").Value}";
+        
+        // Use of IO.File is "banned" in Analyzers.  But we're doing it anyway.
+
+#pragma warning disable RS1035 // Do not use APIs banned for analyzers
+        if (!System.IO.File.Exists(fileName))
+        {
+          results.Add
+            (
+              Diagnostic.Create
+              (
+                DiagnosticMessages.MANIFEST_PACKAGE_FILE_NOT_FOUND,
+                Location.Create(manifestPath, new TextSpan(), BuildLinePositionSpan(fileElement, MANIFEST_FILE_ELEMENT_NAME)),
+                fileName.Replace(System.IO.Path.GetDirectoryName(manifestPath), "")
+              )
+            );
+        }
+#pragma warning restore RS1035 // Do not use APIs banned for analyzers
+      }
+
+      foreach (XElement folderElement in parentElement.Elements(ns + MANIFEST_FOLDER_ELEMENT_NAME))
+      {
+        string subFolderName = folderElement.Attribute("name")?.Value;
+        if (!subFolderName.Equals("bin", StringComparison.OrdinalIgnoreCase))
+        {
+          results.AddRange(CheckFileExists(ns, folderElement, manifestPath, $"{path}\\{subFolderName}"));
         }
       }
 

@@ -151,6 +151,60 @@ namespace Nucleus.DeveloperTools.Analyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your manifest (package.xml) file does not have a &lt;components&gt; element and will not install anything..
+        /// </summary>
+        internal static string NUCLEUS105_MESSAGEFORMAT {
+            get {
+                return ResourceManager.GetString("NUCLEUS105_MESSAGEFORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your manifest (package.xml) file does not have a &lt;components&gt; element..
+        /// </summary>
+        internal static string NUCLEUS105_TITLE {
+            get {
+                return ResourceManager.GetString("NUCLEUS105_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your manifest (package.xml) file does not have a &lt;component&gt; elements and will not install anything..
+        /// </summary>
+        internal static string NUCLEUS106_MESSAGEFORMAT {
+            get {
+                return ResourceManager.GetString("NUCLEUS106_MESSAGEFORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your manifest (package.xml) file does not have a &lt;component&gt; elements..
+        /// </summary>
+        internal static string NUCLEUS106_TITLE {
+            get {
+                return ResourceManager.GetString("NUCLEUS106_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your manifest (package.xml) file refers to a file &apos;{0}&apos; which does not exist..
+        /// </summary>
+        internal static string NUCLEUS110_MESSAGEFORMAT {
+            get {
+                return ResourceManager.GetString("NUCLEUS110_MESSAGEFORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; not found..
+        /// </summary>
+        internal static string NUCLEUS110_TITLE {
+            get {
+                return ResourceManager.GetString("NUCLEUS110_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your project references version &apos;{1}&apos; of package &apos;{0}&apos; but your manifest (package.xml) file has a compatibility element with a minVersion of {2}, which is less than {1}.  Either update your minVersion to &apos;{1}&apos; or downgrade your reference to &apos;{0}&apos; to version &apos;{2}&apos; or less..
         /// </summary>
         internal static string NUCLEUS200_MESSAGEFORMAT {

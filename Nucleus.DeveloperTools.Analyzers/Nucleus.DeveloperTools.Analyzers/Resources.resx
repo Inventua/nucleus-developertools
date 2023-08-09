@@ -152,6 +152,28 @@
     <value>Check your &lt;pacakge&gt; name element in package.xml</value>
   </data>
 
+  <data name="NUCLEUS105_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file does not have a &lt;components&gt; element and will not install anything.</value>
+  </data>
+  <data name="NUCLEUS105_TITLE" xml:space="preserve">
+    <value>Your manifest (package.xml) file does not have a &lt;components&gt; element.</value>
+  </data>
+
+  <data name="NUCLEUS106_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file does not have a &lt;component&gt; elements and will not install anything.</value>
+  </data>
+  <data name="NUCLEUS106_TITLE" xml:space="preserve">
+    <value>Your manifest (package.xml) file does not have a &lt;component&gt; elements.</value>
+  </data>
+
+  <data name="NUCLEUS110_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file refers to a file '{0}' which does not exist.</value>
+  </data>
+  <data name="NUCLEUS110_TITLE" xml:space="preserve">
+    <value>File '{0}' not found.</value>
+  </data>
+  
+  
   <data name="NUCLEUS200_MESSAGEFORMAT" xml:space="preserve">
     <value>Your project references version '{1}' of package '{0}' but your manifest (package.xml) file has a compatibility element with a minVersion of {2}, which is less than {1}.  Either update your minVersion to '{1}' or downgrade your reference to '{0}' to version '{2}' or less.</value>
   </data>

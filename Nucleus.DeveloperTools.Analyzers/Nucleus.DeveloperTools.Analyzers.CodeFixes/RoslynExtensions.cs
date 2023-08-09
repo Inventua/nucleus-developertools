@@ -21,7 +21,6 @@ namespace Nucleus.DeveloperTools.Analyzers
       );
 
       return classDeclaration.WithAttributeLists(attributes);
-        //.WithTriviaFrom(classDeclaration);
     }
 
     public static MethodDeclarationSyntax AddAttribute(this MethodDeclarationSyntax methodDeclaration, string attributeName, string[] args)
@@ -35,12 +34,17 @@ namespace Nucleus.DeveloperTools.Analyzers
       );
 
       return methodDeclaration.WithAttributeLists(attributes);
-        //.WithTriviaFrom(methodDeclaration);      
     }
 
     public static TSyntax WithLeadingWhitespaceFrom<TSyntax>(this TSyntax syntax, SyntaxNode node) where TSyntax : SyntaxNode
     {
-      return syntax.WithLeadingTrivia(node.GetLeadingTrivia().GetWhiteSpace().FirstOrDefault());
+      return syntax.WithLeadingTrivia
+      (
+        node
+          .GetLeadingTrivia()
+          .GetWhiteSpace()
+          .FirstOrDefault()
+      );
     }
 
     private static SyntaxTriviaList GetWhiteSpace(this SyntaxTriviaList value)
@@ -48,14 +52,6 @@ namespace Nucleus.DeveloperTools.Analyzers
       return value
         .Where(trivia => trivia.IsKind(SyntaxKind.WhitespaceTrivia))
         .ToSyntaxTriviaList();
-    }
-
-
-    private static SyntaxTriviaList GetWhiteSpac2e(SyntaxNode declaration)
-    {
-      return declaration.GetLeadingTrivia()
-        .Where(trivia => trivia.IsKind(SyntaxKind.WhitespaceTrivia))
-        .ToSyntaxTriviaList();      
     }
 
     private static AttributeListSyntax CreateSingleAttribute(string attributeName, string[] args)

@@ -77,7 +77,6 @@ namespace Nucleus.DeveloperTools.Analyzers
         (
           classDeclaration,
           classDeclaration.AddAttribute("Extension", new string[] { $"\"{await GetExtensionName(document, cancellationToken)}\"" })
-            //.WithTriviaFrom(classDeclaration)
       ));
     }
     

@@ -43,6 +43,28 @@ namespace Nucleus.DeveloperTools.Analyzers
       "Manifest (package.xml)"
     );
 
+    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_NO_COMPONENTS_ELEMENT = Create
+    (
+      "NUCLEUS105",
+      DiagnosticSeverity.Error,
+      "Manifest (package.xml)"
+    );
+
+    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_NO_COMPONENT_ELEMENTS = Create
+    (
+      "NUCLEUS106",
+      DiagnosticSeverity.Error,
+      "Manifest (package.xml)"
+    );
+
+    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_FILE_NOT_FOUND = Create
+    (
+      "NUCLEUS110",
+      DiagnosticSeverity.Error,
+      "Manifest (package.xml)"
+    );
+
+
     public static readonly DiagnosticDescriptor MANIFEST_COMPATIBILITY_MINVERSION_TOOLOW = Create
     (
       "NUCLEUS200",

@@ -28,7 +28,7 @@ namespace Nucleus.DeveloperTools.Analyzers
   {
     private static string[] ADMIN_METHODS = { "Save", "Delete", "Remove" };
 
-    public static readonly ImmutableArray<DiagnosticDescriptor> Messages = ImmutableArray.Create
+    public static readonly ImmutableArray<DiagnosticDescriptor> MESSAGES = ImmutableArray.Create
     (
       DiagnosticMessages.CONTROLLER_NO_EXTENSION_ATTRIBUTE,
       DiagnosticMessages.CONTROLLER_ADMIN_NO_AUTHORIZE_ATTRIBUTE
@@ -38,7 +38,7 @@ namespace Nucleus.DeveloperTools.Analyzers
     {
       get
       {
-        return Messages;
+        return MESSAGES;
       }
     }
 
