@@ -13,7 +13,12 @@
 	
 	The Nucleus extension project templates automatically include the lines above.
 -->
-<Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' ToolsVersion="15.0">	
+<Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' ToolsVersion="15.0">
+  <!-- Make package.xml (extension manifest file) available to Nucleus VS Analyzers -->
+  <ItemGroup>
+    <AdditionalFiles Include="Package.xml" />
+  </ItemGroup>
+  
 	<PropertyGroup Label="Normalize Nucleus Environment Variables">
 		<NUCLEUS_PATH>$([MSBuild]::EnsureTrailingSlash('$(NUCLEUS_PATH)'))</NUCLEUS_PATH>
 		<NUCLEUS_PUBLISH_PATH>$([MSBuild]::EnsureTrailingSlash('$(NUCLEUS_PUBLISH_PATH)'))</NUCLEUS_PUBLISH_PATH>
