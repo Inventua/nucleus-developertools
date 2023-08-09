@@ -18,12 +18,49 @@ namespace Nucleus.DeveloperTools.VisualStudioTemplates
 		{
 		}
 
+    /// <summary>
+    /// This function is called after a project template has been run to generate a project.  It auto-formats 
+    /// all project items (files) to compensate for an issue where Visual Studio doesn't always apply the 
+    /// users preference for tab spacing.
+    /// </summary>
+    /// <param name="project"></param>
+    /// <remarks>
+    /// Only source files which are open in the editor can be formatted.  Other project items throw an exception, 
+    /// which is handled/ignored.
+    /// </remarks>
 		public void ProjectFinishedGenerating(Project project)
 		{
+      try
+      {
+        Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
+        foreach (ProjectItem projectItem in project.ProjectItems)
+        {
+          ProjectItemFinishedGenerating(projectItem);
+        }        
+      }
+      catch (Exception)
+      {
+        // this is a non-critical function, ignore errors
+      }
 		}
 
+    /// <summary>
+    /// This function is called after an item template has been run to generate a single project item.  It auto-formats 
+    /// the specified project (source code file) to compensate for an issue where Visual Studio doesn't always apply the 
+    /// users preference for tab spacing.
+    /// </summary>
 		public void ProjectItemFinishedGenerating(ProjectItem projectItem)
 		{
+      try
+      {
+        Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+        projectItem.Document.DTE.ExecuteCommand("Edit.FormatDocument");
+      }
+      catch (Exception)
+      {
+        // this is a non-critical function, ignore errors
+      }
 		}
 
     /// <summary>
