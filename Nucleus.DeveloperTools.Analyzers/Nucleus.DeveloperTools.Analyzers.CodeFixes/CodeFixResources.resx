@@ -117,59 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NUCLEUS100_MESSAGEFORMAT" xml:space="preserve">
-    <value>Your manifest (package.xml) file has an empty Id attribute.</value>
+  <data name="NUCLEUS301_CODEFIXTITLE" xml:space="preserve">
+    <value>Add [Authorize] attribute</value>
+    <comment>Add an [Authorize] attribute to the MVC action to check user authorization.</comment>
   </data>
-  <data name="NUCLEUS100_TITLE" xml:space="preserve">
-    <value>Check your &lt;package&gt; element id in package.xml</value>
-  </data>
-
-  <data name="NUCLEUS103_MESSAGEFORMAT" xml:space="preserve">
-    <value>Your manifest (package.xml) file has an invalid Id attribute (value is not a guid).</value>
-  </data>
-  <data name="NUCLEUS103_TITLE" xml:space="preserve">
-    <value>Check your &lt;package&gt; element id in package.xml</value>
-  </data>
-
-  <data name="NUCLEUS102_MESSAGEFORMAT" xml:space="preserve">
-    <value>Your manifest (package.xml) file has an empty version element.</value>
-  </data>
-  <data name="NUCLEUS102_TITLE" xml:space="preserve">
-    <value>Check your &lt;pacakge&gt; version element in package.xml</value>
-  </data>
-
-  <data name="NUCLEUS104_MESSAGEFORMAT" xml:space="preserve">
-    <value>Your manifest (package.xml) file has an invalid version element.  The version element must contain a version number in the format 'major.minor[.build[.revision]]', where build and revision are optional.</value>
-  </data>
-  <data name="NUCLEUS104_TITLE" xml:space="preserve">
-    <value>Check your &lt;pacakge&gt; version element in package.xml</value>
-  </data>
-
-  <data name="NUCLEUS101_MESSAGEFORMAT" xml:space="preserve">
-    <value>Your manifest (package.xml) file has an empty name element.</value>
-  </data>
-  <data name="NUCLEUS101_TITLE" xml:space="preserve">
-    <value>Check your &lt;pacakge&gt; name element in package.xml</value>
-  </data>
-
-  <data name="NUCLEUS200_MESSAGEFORMAT" xml:space="preserve">
-    <value>Your project references version '{1}' of package '{0}' but your manifest (package.xml) file has a compatibility element with a minVersion of {2}, which is less than {1}.  Either update your minVersion to '{1}' or downgrade your reference to '{0}' to version '{2}' or less.</value>
-  </data>
-  <data name="NUCLEUS200_TITLE" xml:space="preserve">
-    <value>Check your &lt;compatibilty&gt; element in package.xml</value>
-  </data>
-
-  <data name="NUCLEUS300_MESSAGEFORMAT" xml:space="preserve">
-    <value>Controller class '{0}' does not have an [Extension] attribute. A Nucleus.Abstractions.Extension attribute is required to facilitate Nucleus routing.</value>
-  </data>
-  <data name="NUCLEUS300_TITLE" xml:space="preserve">
-    <value>Controller class '{0}' does not have an [Extension] attribute.</value>
-  </data>
-
-  <data name="NUCLEUS301_MESSAGEFORMAT" xml:space="preserve">
-    <value>Controller class '{0}', method '{1}' looks like a controller action which updates data, but neither the '{0}' class or the '{1}' method have an [Authorize] attribute. This may be a security risk because you are not checking user authorization for this action.</value>
-  </data>
-  <data name="NUCLEUS301_TITLE" xml:space="preserve">
-    <value>Missing [Authorize] attribute in controller class '{0}' method '{1}'.</value>
+  <data name="NUCLEUS300_CODEFIXTITLE" xml:space="preserve">
+    <value>Add [Extension] attribute</value>
+    <comment>Add an [Extension] attribute to the controller so that Nucleus can route controller actions.</comment>
   </data>
 </root>

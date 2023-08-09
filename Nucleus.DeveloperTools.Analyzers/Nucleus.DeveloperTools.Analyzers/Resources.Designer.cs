@@ -133,6 +133,24 @@ namespace Nucleus.DeveloperTools.Analyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your manifest (package.xml) file has an invalid version element.  The version element must contain a version number in the format &apos;major.minor[.build[.revision]]&apos;, where build and revision are optional..
+        /// </summary>
+        internal static string NUCLEUS104_MESSAGEFORMAT {
+            get {
+                return ResourceManager.GetString("NUCLEUS104_MESSAGEFORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check your &lt;pacakge&gt; version element in package.xml.
+        /// </summary>
+        internal static string NUCLEUS104_TITLE {
+            get {
+                return ResourceManager.GetString("NUCLEUS104_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your project references version &apos;{1}&apos; of package &apos;{0}&apos; but your manifest (package.xml) file has a compatibility element with a minVersion of {2}, which is less than {1}.  Either update your minVersion to &apos;{1}&apos; or downgrade your reference to &apos;{0}&apos; to version &apos;{2}&apos; or less..
         /// </summary>
         internal static string NUCLEUS200_MESSAGEFORMAT {
@@ -147,6 +165,42 @@ namespace Nucleus.DeveloperTools.Analyzers {
         internal static string NUCLEUS200_TITLE {
             get {
                 return ResourceManager.GetString("NUCLEUS200_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controller class &apos;{0}&apos; does not have an [Extension] attribute. A Nucleus.Abstractions.Extension attribute is required to facilitate Nucleus routing..
+        /// </summary>
+        internal static string NUCLEUS300_MESSAGEFORMAT {
+            get {
+                return ResourceManager.GetString("NUCLEUS300_MESSAGEFORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controller class &apos;{0}&apos; does not have an [Extension] attribute..
+        /// </summary>
+        internal static string NUCLEUS300_TITLE {
+            get {
+                return ResourceManager.GetString("NUCLEUS300_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controller class &apos;{0}&apos;, method &apos;{1}&apos; looks like a controller action which updates data, but neither the &apos;{0}&apos; class or the &apos;{1}&apos; method have an [Authorize] attribute. This may be a security risk because you are not checking user authorization for this action..
+        /// </summary>
+        internal static string NUCLEUS301_MESSAGEFORMAT {
+            get {
+                return ResourceManager.GetString("NUCLEUS301_MESSAGEFORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing [Authorize] attribute in controller class &apos;{0}&apos; method &apos;{1}&apos;..
+        /// </summary>
+        internal static string NUCLEUS301_TITLE {
+            get {
+                return ResourceManager.GetString("NUCLEUS301_TITLE", resourceCulture);
             }
         }
     }

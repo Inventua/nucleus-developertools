@@ -29,7 +29,7 @@ namespace Nucleus.DeveloperTools.Analyzers
   ///   </ItemGroup>
   /// </remarks>
   [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
-  public class ManifestCompatibilityVersionAnalyzer : DiagnosticAnalyzer
+  public class ManifestAnalyzer : DiagnosticAnalyzer
   {
     private static string[] NUCLEUS_PACKAGES =
     {
@@ -57,23 +57,31 @@ namespace Nucleus.DeveloperTools.Analyzers
 
     private const string MANIFEST_COMPONENTS_ELEMENT_NAME = "components";
 
+    public static readonly ImmutableArray<DiagnosticDescriptor> Messages = ImmutableArray.Create
+    (
+      DiagnosticMessages.MANIFEST_PACKAGE_ID_EMPTY,
+      DiagnosticMessages.MANIFEST_PACKAGE_ID_INVALID,
+      DiagnosticMessages.MANIFEST_PACKAGE_NAME_EMPTY,
+      DiagnosticMessages.MANIFEST_PACKAGE_VERSION_EMPTY,
+      DiagnosticMessages.MANIFEST_PACKAGE_VERSION_INVALID,
 
+      DiagnosticMessages.MANIFEST_COMPATIBILITY_MINVERSION_TOOLOW
+    );
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
     {
       get
       {
-        return DiagnosticMessages.Messages;
-        //ImmutableArray.Create(DiagnosticMessages.MANIFEST_COMPATIBILITY_MINVERSION_TOOLOW);
+        return Messages;
       }
-    }
+    }    
 
     public override void Initialize(AnalysisContext context)
     {
       context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
       context.EnableConcurrentExecution();
 
-      context.RegisterCompilationStartAction(AnalyzeManifest);
+      context.RegisterCompilationAction(AnalyzeManifest);
     }
 
     /// <summary>
@@ -86,32 +94,25 @@ namespace Nucleus.DeveloperTools.Analyzers
     /// Manifest analysis warnings and errors do not have a corresponing CodeFixProvider, because CodeFixProviders can 
     /// only work with C# and VB source files (not XML files).
     /// </remarks>
-    /// <param name="compilationStartContext"></param>
-    private static void AnalyzeManifest(CompilationStartAnalysisContext compilationStartContext)
+    /// <param name="context"></param>
+    private static void AnalyzeManifest(CompilationAnalysisContext context)
     {
       List<Diagnostic> results = new List<Diagnostic>();
 
-      Models.Manifest manifest = ReadManifest(compilationStartContext.Options.AdditionalFiles, compilationStartContext.CancellationToken);
-
-      
+      Models.Manifest manifest = ReadManifest(context.Options.AdditionalFiles, context.CancellationToken);
+            
       if (manifest.IsValid)
       {
-        results.AddRange(AnalyzeManifestMinVersion(compilationStartContext.Compilation.ReferencedAssemblyNames, manifest));
+        results.AddRange(AnalyzeManifestMinVersion(context.Compilation.ReferencedAssemblyNames, manifest));
         results.AddRange(AnalyzeManifestPackageId(manifest));
         results.AddRange(AnalyzeManifestPackageName(manifest));
         results.AddRange(AnalyzeManifestPackageVersion(manifest));
-
       }
-
-      // compilationStartContext does not have a .ReportDiagnostic method, so we have to register a compilation end
-      // action in order to call ReportDiagnostic.
-      compilationStartContext.RegisterCompilationEndAction(context =>
+    
+      foreach (Diagnostic result in results)
       {
-        foreach (Diagnostic result in results)
-        {
-          context.ReportDiagnostic(result);
-        }
-      });
+        context.ReportDiagnostic(result);
+      }      
     }
 
     /// <summary>
@@ -123,7 +124,6 @@ namespace Nucleus.DeveloperTools.Analyzers
     private static Models.Manifest ReadManifest(ImmutableArray<AdditionalText> additionalFiles, CancellationToken cancellationToken)
     {
       Models.Manifest result = new Models.Manifest();
-      // XDocument packageDocument = null;
 
       // read package.xml
       AdditionalText packageFile = additionalFiles
@@ -134,7 +134,7 @@ namespace Nucleus.DeveloperTools.Analyzers
       {
         SourceText packageFileText = packageFile.GetText(cancellationToken);
 
-        // Write the additional file back to a stream.
+        // Write the additional file back to stream and load it into an XDocument.
         using (MemoryStream stream = new MemoryStream())
         {
           using (StreamWriter writer = new StreamWriter(stream, System.Text.Encoding.UTF8, 4096, true))
@@ -297,6 +297,17 @@ namespace Nucleus.DeveloperTools.Analyzers
             Diagnostic.Create
             (
               DiagnosticMessages.MANIFEST_PACKAGE_VERSION_EMPTY,
+              Location.Create(manifest.Path, new TextSpan(), BuildLinePositionSpan(packageVersionElement, MANIFEST_PACKAGE_VERSION_ELEMENT))
+            )
+          );
+        }
+        else if (!Version.TryParse(packageVersionElement.Value, out Version _))
+        {
+          results.Add
+          (
+            Diagnostic.Create
+            (
+              DiagnosticMessages.MANIFEST_PACKAGE_VERSION_INVALID,
               Location.Create(manifest.Path, new TextSpan(), BuildLinePositionSpan(packageVersionElement, MANIFEST_PACKAGE_VERSION_ELEMENT))
             )
           );

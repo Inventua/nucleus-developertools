@@ -36,6 +36,13 @@ namespace Nucleus.DeveloperTools.Analyzers
       "Manifest (package.xml)"
     );
 
+    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_VERSION_INVALID = Create
+    (
+      "NUCLEUS104",
+      DiagnosticSeverity.Error,
+      "Manifest (package.xml)"
+    );
+
     public static readonly DiagnosticDescriptor MANIFEST_COMPATIBILITY_MINVERSION_TOOLOW = Create
     (
       "NUCLEUS200",
@@ -43,15 +50,22 @@ namespace Nucleus.DeveloperTools.Analyzers
       "Manifest (package.xml)"
     );
 
-    public static readonly ImmutableArray<DiagnosticDescriptor> Messages = ImmutableArray.Create
+    public static readonly DiagnosticDescriptor CONTROLLER_NO_EXTENSION_ATTRIBUTE = Create
     (
-      MANIFEST_PACKAGE_ID_EMPTY,
-      MANIFEST_PACKAGE_ID_INVALID,
-      MANIFEST_PACKAGE_NAME_EMPTY,
-      MANIFEST_PACKAGE_VERSION_EMPTY,
-
-      MANIFEST_COMPATIBILITY_MINVERSION_TOOLOW
+      "NUCLEUS300",
+      DiagnosticSeverity.Warning,
+      "Controllers"
     );
+
+    public static readonly DiagnosticDescriptor CONTROLLER_ADMIN_NO_AUTHORIZE_ATTRIBUTE = Create
+    (
+      "NUCLEUS301",
+      DiagnosticSeverity.Info,
+      "Controllers"
+    );
+
+    
+
 
     private static DiagnosticDescriptor Create(string diagnosticId, DiagnosticSeverity severity, string category)
     {
