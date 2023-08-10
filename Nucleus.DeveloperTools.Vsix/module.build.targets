@@ -47,11 +47,11 @@
 			<Output TaskParameter="Result" ItemName="_XmlPackageAssemblies" />
 		</XmlPeek>
 		<ItemGroup>
-			<PackageAssemblies Include="@(_XmlPackageAssemblies->'bin\$(Configuration)\$(TargetFramework)\%(Identity)')" />
+			<PackageAssemblies Include="@(_XmlPackageAssemblies->'bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).dll')" />
 		</ItemGroup>
 	</Target>
 	
-	<Target Name="test" AfterTargets="PostBuildEvent">
+	<Target Name="ReportPackageAssemblies" AfterTargets="PostBuildEvent">
 		<Message Importance="high" Text="Package assembles: @(PackageAssemblies)" />
 	</Target>
 	<!-- 

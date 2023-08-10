@@ -28,13 +28,11 @@
   <ItemGroup>
     <Content Include="package.xml" />
     <Content Include="readme.txt" />
-    <Content Include="license.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="package.xml" />
     <Content Include="readme.txt" />
-    <Content Include="license.txt" />
   </ItemGroup>
 
 	<ItemGroup>
