@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- This project is used to test the Analyzers and Code Fix Providers from within Visual Studio -->
+<!-- The actual deployment is done by Nucleus.DeveloperTools.Vsix -->
 <Project>
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
 

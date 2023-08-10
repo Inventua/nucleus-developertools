@@ -24,25 +24,17 @@
     <Content Include="**\*.js" />
     <Content Include="**\*.cshtml" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <None Remove="viewer.css" />
-    <None Remove="package.xml" />
-    <None Remove="readme.txt" />
-    <None Remove="settings.css" />
-		<None Remove="Views\_ViewImports.cshtml" />
-    <None Remove="Views\Settings.cshtml" />
-    <None Remove="Views\Viewer.cshtml" />
+    <Content Include="package.xml" />
+    <Content Include="readme.txt" />
+    <Content Include="license.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="viewer.css" />
     <Content Include="package.xml" />
     <Content Include="readme.txt" />
-    <Content Include="settings.css" />
-		<Content Include="Views\_ViewImports.cshtml" />
-    <Content Include="Views\Viewer.cshtml" />
-    <Content Include="Views\Settings.cshtml" />
+    <Content Include="license.txt" />
   </ItemGroup>
 
 	<ItemGroup>

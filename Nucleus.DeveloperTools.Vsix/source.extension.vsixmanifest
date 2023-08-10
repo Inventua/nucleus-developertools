@@ -1,22 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Nucleus.DeveloperTools.VisualStudioTemplates.69c392ae-8843-488a-ab8b-ee7937873dcc" Version="1.2.2.0" Language="en-US" Publisher="Nucleus" />
-    <DisplayName>Nucleus Templates</DisplayName>    
-    <Description xml:space="preserve">Nucleus Visual Studio Templates</Description>
+    <Identity Id="Nucleus.DeveloperTools.69c392ae-8843-488a-ab8b-ee7937873dcc" Version="1.2.2.0" Language="en-US" Publisher="Nucleus" />
+    <DisplayName>Nucleus Developer Tools</DisplayName>
+    <Description xml:space="preserve">Nucleus Developer Tools.  Visual Studio Templates, Analyzers, Code fix providers.</Description>
     <MoreInfo>https://www.nucleus-cms.com/develop-extensions/</MoreInfo>
     <License>license.txt</License>
     <Icon>nucleus.ico</Icon>
+    <Tags>Nucleus</Tags>
     <Preview>true</Preview>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
       <ProductArchitecture>amd64</ProductArchitecture>
     </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[17.0,18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
   </Installation>
   <Dependencies>
-    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.8,)" />
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.7.2,)" />
   </Dependencies>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,18.0)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,18.0)" DisplayName="Roslyn Language Services" />
+  </Prerequisites>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Complex Extension.zip" />
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Simple Extension.zip" />
@@ -28,9 +39,11 @@
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Layout.zip" />
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Container.zip" />
 
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|"/>
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|"/>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|"/>
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|"/>
+
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.VisualStudio.TemplateWizard" Path="|Nucleus.DeveloperTools.VisualStudio.TemplateWizard|" AssemblyName="|Nucleus.DeveloperTools.VisualStudio.TemplateWizard;AssemblyName|" />
   </Assets>
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
-  </Prerequisites>
 </PackageManifest>

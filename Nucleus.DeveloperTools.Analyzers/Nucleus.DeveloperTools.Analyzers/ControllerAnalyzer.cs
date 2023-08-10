@@ -8,15 +8,12 @@ using Nucleus.DeveloperTools.Analyzers.Nucleus.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using System.Linq;
 
 namespace Nucleus.DeveloperTools.Analyzers
 {

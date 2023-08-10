@@ -10,6 +10,7 @@
     <SortOrder>1001</SortOrder>   
     <DefaultName>View</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
+    <Icon>nucleus.ico</Icon>
 		<LanguageTag>csharp</LanguageTag>
     <ProjectTypeTag>AspNetCore</ProjectTypeTag>
   </TemplateData>
@@ -23,7 +24,7 @@
   </TemplateContent>
 
   <WizardExtension>
-    <Assembly>Nucleus.DeveloperTools.VisualStudioTemplates, Version=1.2.2.0, Culture=Neutral, PublicKeyToken=2cc815f0f52d0477</Assembly>
-    <FullClassName>Nucleus.DeveloperTools.VisualStudioTemplates.ProjectWizard</FullClassName>
+    <Assembly>Nucleus.DeveloperTools.VisualStudio.TemplateWizard, Version=1.2.2.0, Culture=Neutral, PublicKeyToken=2cc815f0f52d0477</Assembly>
+    <FullClassName>Nucleus.DeveloperTools.VisualStudio.TemplateWizard.ProjectWizard</FullClassName>
   </WizardExtension>
 </VSTemplate>

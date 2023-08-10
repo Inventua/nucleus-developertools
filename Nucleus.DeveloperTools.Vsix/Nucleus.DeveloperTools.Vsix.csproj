@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- 
+    This project creates the production install set (VSIX) which includes the templates, analyzers and code fix providers all 
+    in one package.
+  -->
+  <PropertyGroup>
+    <VersionPrefix>1.2.2.0</VersionPrefix>
+    <!--<VersionSuffix>a3</VersionSuffix>-->
+    <Authors>Inventua Pty Ltd</Authors>
+    <Product>Nucleus</Product>
+    <AssemblyTitle>Nucleus Developer Tools</AssemblyTitle>
+    <Copyright>(c) Inventua Pty Ptd</Copyright>
+  </PropertyGroup>
+  
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>Nucleus.DeveloperTools.Vsix</RootNamespace>
+    <AssemblyName>Nucleus.DeveloperTools</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <VSSDKTargetPlatformRegRootSuffix>Roslyn</VSSDKTargetPlatformRegRootSuffix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.6.2164" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix $(VSSDKTargetPlatformRegRootSuffix)</StartArguments>
+  </PropertyGroup>
+
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.CodeFixes\Nucleus.DeveloperTools.Analyzers.CodeFixes.csproj" />
+    <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.csproj" />
+    <ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudio.TemplateWizard\Nucleus.DeveloperTools.VisualStudio.TemplateWizard.csproj" />
+
+    <!--<ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudioTemplates\Nucleus.DeveloperTools.VisualStudioTemplates.csproj" />-->
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="Nucleus.DeveloperTools.pfx" />
+
+    <Content Include="license.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+
+    <Content Include="nucleus.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+
+    <Content Include="ProjectTemplates\*.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    
+    <Content Include="ItemTemplates\*.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="vsix.build.targets" />
+  </ItemGroup>
+
+  <PropertyGroup Label="Normalize Nucleus Environment Variables">
+    <NUCLEUS_PATH>$([MSBuild]::EnsureTrailingSlash('$(NUCLEUS_PATH)'))</NUCLEUS_PATH>
+    <NUCLEUS_PUBLISH_PATH>$([MSBuild]::EnsureTrailingSlash('$(NUCLEUS_PUBLISH_PATH)'))</NUCLEUS_PUBLISH_PATH>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- https://github.com/dotnet/sdk/issues/433 -->
+    <ProjectReference Update="@(ProjectReference)" AdditionalProperties="TargetFramework=netstandard2.0" />
+
+    <!-- https://github.com/Microsoft/extendvs/issues/57 -->
+    <ProjectReference Update="@(ProjectReference)" Name="%(Filename)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ItemTemplates\" />
+    <Folder Include="ProjectTemplates\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <Import Project="vsix.build.targets" />
+</Project>

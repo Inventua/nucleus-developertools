@@ -13,7 +13,7 @@
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
-<ItemGroup>
+  <ItemGroup>
 		<None Remove="**\*.vspscc" />
 		<None Remove="**\*.scc" />
 		<None Remove="*.zip" />
@@ -25,26 +25,18 @@
     <Content Include="**\*.cshtml" />
   </ItemGroup>
 
-  <!--<ItemGroup>
-    <None Remove="viewer.css" />
-    <None Remove="package.xml" />
-    <None Remove="readme.txt" />
-    <None Remove="settings.css" />
-		<None Remove="Views\_ViewImports.cshtml" />
-    <None Remove="Views\Settings.cshtml" />
-    <None Remove="Views\Viewer.cshtml" />
-  </ItemGroup>
-  
   <ItemGroup>
-    <Content Include="viewer.css" />
     <Content Include="package.xml" />
     <Content Include="readme.txt" />
-    <Content Include="settings.css" />
-		<Content Include="Views\_ViewImports.cshtml" />
-    <Content Include="Views\Viewer.cshtml" />
-    <Content Include="Views\Settings.cshtml" />
-  </ItemGroup>-->
+    <Content Include="license.txt" />
+  </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="package.xml" />
+    <Content Include="readme.txt" />
+    <Content Include="license.txt" />
+  </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="DataProviders\Migrations\Scripts\01.00.00.json" />
   </ItemGroup>

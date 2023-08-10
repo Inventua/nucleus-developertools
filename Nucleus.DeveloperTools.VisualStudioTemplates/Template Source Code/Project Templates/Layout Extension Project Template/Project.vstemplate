@@ -11,11 +11,10 @@
     <LocationField>Enabled</LocationField>
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
     <CreateInPlace>true</CreateInPlace>
-    <Icon>__TemplateIcon.ico</Icon>
+    <Icon>nucleus.ico</Icon>
 		<LanguageTag>csharp</LanguageTag>
     <PlatformTag>Windows</PlatformTag>
     <PlatformTag>Linux</PlatformTag>
-    <PlatformTag>Nucleus</PlatformTag>
     <ProjectTypeTag>AspNetCore</ProjectTypeTag>
     <ProjectTypeTag>Nucleus</ProjectTypeTag>
   </TemplateData>
@@ -27,20 +26,20 @@
         <ProjectItem TargetFileName="launchSettings.json">launchSettings.json</ProjectItem>
       </Folder>
 
-      <Folder Name="Layouts" TargetFolderName="\Layouts">
+      <Folder Name="Layouts" TargetFolderName="Layouts">
         <ProjectItem ReplaceParameters="true" TargetFileName="layout.cshtml">layout.cshtml</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="layout.css">layout.css</ProjectItem>
       </Folder>
 
-      <Folder Name="Containers" TargetFolderName="\Containers">
+      <Folder Name="Containers" TargetFolderName="Containers">
         <ProjectItem ReplaceParameters="true" TargetFileName="container.cshtml">container.cshtml</ProjectItem>
       </Folder>
     </Project>
   </TemplateContent>
-	
-	<WizardExtension>
-		<Assembly>Nucleus.DeveloperTools.VisualStudioTemplates, Version=1.2.2.0, Culture=Neutral, PublicKeyToken=2cc815f0f52d0477</Assembly>
-		<FullClassName>Nucleus.DeveloperTools.VisualStudioTemplates.ProjectWizard</FullClassName>
-	</WizardExtension>
+
+  <WizardExtension>
+    <Assembly>Nucleus.DeveloperTools.VisualStudio.TemplateWizard, Version=1.2.2.0, Culture=Neutral, PublicKeyToken=2cc815f0f52d0477</Assembly>
+    <FullClassName>Nucleus.DeveloperTools.VisualStudio.TemplateWizard.ProjectWizard</FullClassName>
+  </WizardExtension>
 
 </VSTemplate>

@@ -17,9 +17,7 @@
         <friendlyName>Container</friendlyName>
         <relativePath>Containers\container.cshtml</relativePath>
       </containerDefinition>
-      
-      <file name="license.txt" />
-      
+            
       <folder name="Layouts">
         <file name="layout.cshtml" />
         <file name="layout.css" />

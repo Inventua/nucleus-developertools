@@ -26,13 +26,15 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Remove="package.xml" />
-    <None Remove="readme.txt" />    
+    <Content Include="package.xml" />
+    <Content Include="readme.txt" />
+    <Content Include="license.txt" />   
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="package.xml" />
-    <Content Include="readme.txt" />    
+    <Content Include="readme.txt" />
+    <Content Include="license.txt" />
   </ItemGroup>
 
 	<ItemGroup>
