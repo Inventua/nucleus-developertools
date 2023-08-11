@@ -5,7 +5,7 @@
     so that we can run Nucleus.DeveloperTools.VisualStudioTemplates from within Visual Studio and test in the experimental 
     instance of VIsual Studio.
     
-    The production VSIX is created by the "Nucleus.DeveloperTools.Vsix" project .
+    The production VSIX is created by the "Nucleus.DeveloperTools.Vsix" project, which includes all of the Nucleus developer tools.
   -->
   <PropertyGroup>
     <VersionPrefix>1.2.2.0</VersionPrefix>

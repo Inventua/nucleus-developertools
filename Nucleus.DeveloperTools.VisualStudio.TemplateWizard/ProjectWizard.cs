@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TemplateWizard;
 using System.Windows.Forms;
 using EnvDTE;
 using System.Linq;
+using EnvDTE80;
 
 namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 {
@@ -30,6 +31,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 		{
       try
       {
+			  Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
         foreach (ProjectItem projectItem in project.ProjectItems)
         {
           ProjectItemFinishedGenerating(projectItem);
@@ -71,7 +73,15 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 					System.Environment.SetEnvironmentVariable("NUCLEUS_PATH", System.IO.Path.GetDirectoryName(this.GetType().Assembly.Location), EnvironmentVariableTarget.User);
 				}
 			}
-		}
+
+      // set the NUCLEUS_TOOLS_PATH environment variable without asking, if it is not already set.
+      // By default, NUCLEUS_PATH is set to the same folder as NUCLEUS_TOOLS_PATH, but it can be changed later to point to a dev instance of Nucleus.  NUCLEUS_TOOLS_PATH is 
+      // meant to always point to the install location of the developer tools so that it can be used to locate Visual Studio and MSBuild extensions.
+      if (String.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("NUCLEUS_TOOLS_PATH")))
+      {
+        System.Environment.SetEnvironmentVariable("NUCLEUS_TOOLS_PATH", System.IO.Path.GetDirectoryName(this.GetType().Assembly.Location), EnvironmentVariableTarget.User);        
+      }
+    }
 
 		private string Get(Dictionary<string, string> replacementsDictionary, string key)
 		{
@@ -120,15 +130,17 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 					{
 						defaultExtensionName = defaultExtensionNameParts.Last();
 					}
-					string defaultModelName = defaultExtensionName;
+          
+          string friendlyName = defaultExtensionName;
+          string defaultModelName = defaultExtensionName.ReplaceInvalidCharacters(true);
 
           // show the wizard form
 					ProjectWizardForm projectOptionsForm = new ProjectWizardForm
 					{
-						ClassNameEnabled = true, //!isSimpleExtension,
-						ExtensionNamespace = Get(replacementsDictionary, "$safeprojectname$"),
-						ExtensionName = defaultExtensionName,
-						FriendlyName = defaultExtensionName,
+						ClassNameEnabled = true, 
+						ExtensionNamespace = Get(replacementsDictionary, "$safeprojectname$").ReplaceInvalidCharacters(true),
+						ExtensionName = defaultExtensionName.ReplaceInvalidCharacters(false),
+						FriendlyName = friendlyName,
 						PublisherName = Get(replacementsDictionary, "$registeredorganization$"),
 						ModelClassName = defaultModelName,
             SourceLocation = (string)customParams.FirstOrDefault() ?? ""
@@ -147,7 +159,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 						replacementsDictionary.Add("$nucleus.extension.friendlyname$", projectOptionsForm.FriendlyName);
 
 						replacementsDictionary.Add("$nucleus.extension.model_class_name$", projectOptionsForm.ModelClassName);
-						replacementsDictionary.Add("$nucleus.extension.model_class_name.camelcase$", projectOptionsForm.ModelClassName.Substring(0, 1).ToLower() + projectOptionsForm.ModelClassName.Substring(1));
+						replacementsDictionary.Add("$nucleus.extension.model_class_name.camelcase$", projectOptionsForm.ModelClassName.ToCamelCase());
             replacementsDictionary.Add("$nucleus.extension.model_class_name.lowercase$", projectOptionsForm.ModelClassName.ToLower());
 
             replacementsDictionary.Add("$publisher.name$", projectOptionsForm.PublisherName);
@@ -242,7 +254,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
       string projectPath = System.IO.Path.GetDirectoryName(activeProj.FullName);
 
       string fullPath = System.IO.Path.Combine(projectPath, folder);
-
+           
       if (!System.IO.Directory.Exists(fullPath))
       {
         activeProj.ProjectItems.AddFolder(folder);
@@ -257,17 +269,13 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
     private void AddExtensionNameTokens(Dictionary<string, string> replacementsDictionary, string extensionName)
     {
       replacementsDictionary.Add("$nucleus.extension.name$", extensionName);
-      replacementsDictionary.Add("$nucleus.extension.name.camelcase$", extensionName.Substring(0, 1).ToLower() + extensionName.Substring(1));
+      replacementsDictionary.Add("$nucleus.extension.name.camelcase$", extensionName.ToCamelCase());
       replacementsDictionary.Add("$nucleus.extension.name.lowercase$", extensionName.ToLower());
 
-      string extensionNameSingular = extensionName;
-      if (extensionNameSingular.EndsWith("s"))
-      {
-        extensionNameSingular = extensionNameSingular.Substring(0, extensionNameSingular.Length - 1);
-      }
+      string extensionNameSingular = extensionName.ToSingular();
 
       replacementsDictionary.Add("$nucleus.extension.name-singular$", extensionNameSingular);
-      replacementsDictionary.Add("$nucleus.extension.name-singular.camelcase$", extensionNameSingular.Substring(0, 1).ToLower() + extensionNameSingular.Substring(1));
+      replacementsDictionary.Add("$nucleus.extension.name-singular.camelcase$", extensionNameSingular.ToCamelCase());
       replacementsDictionary.Add("$nucleus.extension.name-singular.lowercase$", extensionNameSingular.ToLower());
     }
   }

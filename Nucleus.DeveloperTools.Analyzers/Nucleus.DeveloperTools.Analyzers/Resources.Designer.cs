@@ -61,200 +61,38 @@ namespace Nucleus.DeveloperTools.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file has an empty Id attribute..
-        /// </summary>
-        internal static string NUCLEUS100_MESSAGEFORMAT {
-            get {
-                return ResourceManager.GetString("NUCLEUS100_MESSAGEFORMAT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Check your &lt;package&gt; element id in package.xml.
-        /// </summary>
-        internal static string NUCLEUS100_TITLE {
-            get {
-                return ResourceManager.GetString("NUCLEUS100_TITLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file has an empty name element..
-        /// </summary>
-        internal static string NUCLEUS101_MESSAGEFORMAT {
-            get {
-                return ResourceManager.GetString("NUCLEUS101_MESSAGEFORMAT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Check your &lt;pacakge&gt; name element in package.xml.
-        /// </summary>
-        internal static string NUCLEUS101_TITLE {
-            get {
-                return ResourceManager.GetString("NUCLEUS101_TITLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file has an empty version element..
-        /// </summary>
-        internal static string NUCLEUS102_MESSAGEFORMAT {
-            get {
-                return ResourceManager.GetString("NUCLEUS102_MESSAGEFORMAT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Check your &lt;pacakge&gt; version element in package.xml.
-        /// </summary>
-        internal static string NUCLEUS102_TITLE {
-            get {
-                return ResourceManager.GetString("NUCLEUS102_TITLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file has an invalid Id attribute (value is not a guid)..
-        /// </summary>
-        internal static string NUCLEUS103_MESSAGEFORMAT {
-            get {
-                return ResourceManager.GetString("NUCLEUS103_MESSAGEFORMAT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Check your &lt;package&gt; element id in package.xml.
-        /// </summary>
-        internal static string NUCLEUS103_TITLE {
-            get {
-                return ResourceManager.GetString("NUCLEUS103_TITLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file has an invalid version element.  The version element must contain a version number in the format &apos;major.minor[.build[.revision]]&apos;, where build and revision are optional..
-        /// </summary>
-        internal static string NUCLEUS104_MESSAGEFORMAT {
-            get {
-                return ResourceManager.GetString("NUCLEUS104_MESSAGEFORMAT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Check your &lt;pacakge&gt; version element in package.xml.
-        /// </summary>
-        internal static string NUCLEUS104_TITLE {
-            get {
-                return ResourceManager.GetString("NUCLEUS104_TITLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file does not have a &lt;components&gt; element and will not install anything..
-        /// </summary>
-        internal static string NUCLEUS105_MESSAGEFORMAT {
-            get {
-                return ResourceManager.GetString("NUCLEUS105_MESSAGEFORMAT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file does not have a &lt;components&gt; element..
-        /// </summary>
-        internal static string NUCLEUS105_TITLE {
-            get {
-                return ResourceManager.GetString("NUCLEUS105_TITLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file does not have a &lt;component&gt; elements and will not install anything..
-        /// </summary>
-        internal static string NUCLEUS106_MESSAGEFORMAT {
-            get {
-                return ResourceManager.GetString("NUCLEUS106_MESSAGEFORMAT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file does not have a &lt;component&gt; elements..
-        /// </summary>
-        internal static string NUCLEUS106_TITLE {
-            get {
-                return ResourceManager.GetString("NUCLEUS106_TITLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) file refers to a file &apos;{0}&apos; which does not exist..
-        /// </summary>
-        internal static string NUCLEUS110_MESSAGEFORMAT {
-            get {
-                return ResourceManager.GetString("NUCLEUS110_MESSAGEFORMAT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File &apos;{0}&apos; not found..
-        /// </summary>
-        internal static string NUCLEUS110_TITLE {
-            get {
-                return ResourceManager.GetString("NUCLEUS110_TITLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your project references version &apos;{1}&apos; of package &apos;{0}&apos; but your manifest (package.xml) file has a compatibility element with a minVersion of {2}, which is less than {1}.  Either update your minVersion to &apos;{1}&apos; or downgrade your reference to &apos;{0}&apos; to version &apos;{2}&apos; or less..
-        /// </summary>
-        internal static string NUCLEUS200_MESSAGEFORMAT {
-            get {
-                return ResourceManager.GetString("NUCLEUS200_MESSAGEFORMAT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Check your &lt;compatibilty&gt; element in package.xml.
-        /// </summary>
-        internal static string NUCLEUS200_TITLE {
-            get {
-                return ResourceManager.GetString("NUCLEUS200_TITLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Controller class &apos;{0}&apos; does not have an [Extension] attribute. A Nucleus.Abstractions.Extension attribute is required to facilitate Nucleus routing..
         /// </summary>
-        internal static string NUCLEUS300_MESSAGEFORMAT {
+        internal static string NUCL300_MESSAGEFORMAT {
             get {
-                return ResourceManager.GetString("NUCLEUS300_MESSAGEFORMAT", resourceCulture);
+                return ResourceManager.GetString("NUCL300_MESSAGEFORMAT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Controller class &apos;{0}&apos; does not have an [Extension] attribute..
         /// </summary>
-        internal static string NUCLEUS300_TITLE {
+        internal static string NUCL300_TITLE {
             get {
-                return ResourceManager.GetString("NUCLEUS300_TITLE", resourceCulture);
+                return ResourceManager.GetString("NUCL300_TITLE", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Controller class &apos;{0}&apos;, method &apos;{1}&apos; looks like a controller action which updates data, but neither the &apos;{0}&apos; class or the &apos;{1}&apos; method have an [Authorize] attribute. This may be a security risk because you are not checking user authorization for this action..
         /// </summary>
-        internal static string NUCLEUS301_MESSAGEFORMAT {
+        internal static string NUCL301_MESSAGEFORMAT {
             get {
-                return ResourceManager.GetString("NUCLEUS301_MESSAGEFORMAT", resourceCulture);
+                return ResourceManager.GetString("NUCL301_MESSAGEFORMAT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Missing [Authorize] attribute in controller class &apos;{0}&apos; method &apos;{1}&apos;..
         /// </summary>
-        internal static string NUCLEUS301_TITLE {
+        internal static string NUCL301_TITLE {
             get {
-                return ResourceManager.GetString("NUCLEUS301_TITLE", resourceCulture);
+                return ResourceManager.GetString("NUCL301_TITLE", resourceCulture);
             }
         }
     }

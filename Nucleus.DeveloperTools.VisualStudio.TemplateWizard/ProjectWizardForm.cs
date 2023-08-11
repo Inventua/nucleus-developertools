@@ -184,7 +184,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 
     private void txtExtensionName_Validating(object sender, CancelEventArgs e)
     {
-      if (!System.Text.RegularExpressions.Regex.IsMatch(this.txtExtensionName.Text, "^([A-Za-z0-9._])*$"))
+      if (!this.txtExtensionName.Text.Validate(true))
       {        
         MessageBox.Show("Extension names can contain letters, numbers, dots and the underscore character.","Invalid Characters", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         e.Cancel = true;
@@ -193,7 +193,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 
     private void txtModelName_Validating(object sender, CancelEventArgs e)
     {
-      if (!System.Text.RegularExpressions.Regex.IsMatch(this.txtModelName.Text, "^([A-Za-z0-9_])*$"))
+      if (!this.txtModelName.Text.Validate(false))
       {
         MessageBox.Show("Model class names can contain letters, numbers and the underscore character.", "Invalid Characters", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         e.Cancel = true;
@@ -202,7 +202,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 
     private void txtExtensionNamespace_Validating(object sender, CancelEventArgs e)
     {
-      if (!System.Text.RegularExpressions.Regex.IsMatch(this.txtExtensionNamespace.Text, "^([A-Za-z0-9._])*$"))
+      if (!this.txtExtensionNamespace.Text.Validate(true))
       {
         MessageBox.Show("Namespace can contain letters, numbers, dots and the underscore character.", "Invalid Characters", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         e.Cancel = true;
@@ -211,6 +211,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 
     private void cmdBack_Click(object sender, EventArgs e)
     {
+      // prevent validation when cancelling the dialog
       this.AutoValidate = AutoValidate.Disable;
     }
   }

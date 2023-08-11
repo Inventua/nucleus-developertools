@@ -8,86 +8,19 @@ namespace Nucleus.DeveloperTools.Analyzers
 {
   public static class DiagnosticMessages
   {
-    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_ID_EMPTY = Create
-    (
-      "NUCLEUS100",
-      DiagnosticSeverity.Error,
-      "Manifest (package.xml)"
-    );
-
-    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_NAME_EMPTY = Create
-    (
-      "NUCLEUS101",
-      DiagnosticSeverity.Error,
-      "Manifest (package.xml)"
-    );
-
-    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_VERSION_EMPTY = Create
-    (
-      "NUCLEUS102",
-      DiagnosticSeverity.Error,
-      "Manifest (package.xml)"
-    );
-
-    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_ID_INVALID = Create
-    (
-      "NUCLEUS103",
-      DiagnosticSeverity.Error,
-      "Manifest (package.xml)"
-    );
-
-    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_VERSION_INVALID = Create
-    (
-      "NUCLEUS104",
-      DiagnosticSeverity.Error,
-      "Manifest (package.xml)"
-    );
-
-    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_NO_COMPONENTS_ELEMENT = Create
-    (
-      "NUCLEUS105",
-      DiagnosticSeverity.Error,
-      "Manifest (package.xml)"
-    );
-
-    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_NO_COMPONENT_ELEMENTS = Create
-    (
-      "NUCLEUS106",
-      DiagnosticSeverity.Error,
-      "Manifest (package.xml)"
-    );
-
-    public static readonly DiagnosticDescriptor MANIFEST_PACKAGE_FILE_NOT_FOUND = Create
-    (
-      "NUCLEUS110",
-      DiagnosticSeverity.Error,
-      "Manifest (package.xml)"
-    );
-
-
-    public static readonly DiagnosticDescriptor MANIFEST_COMPATIBILITY_MINVERSION_TOOLOW = Create
-    (
-      "NUCLEUS200",
-      DiagnosticSeverity.Warning,
-      "Manifest (package.xml)"
-    );
-
     public static readonly DiagnosticDescriptor CONTROLLER_NO_EXTENSION_ATTRIBUTE = Create
     (
-      "NUCLEUS300",
+      "NUCL300",
       DiagnosticSeverity.Warning,
       "Controllers"
     );
 
     public static readonly DiagnosticDescriptor CONTROLLER_ADMIN_NO_AUTHORIZE_ATTRIBUTE = Create
     (
-      "NUCLEUS301",
+      "NUCL301",
       DiagnosticSeverity.Info,
       "Controllers"
     );
-
-    
-
 
     private static DiagnosticDescriptor Create(string diagnosticId, DiagnosticSeverity severity, string category)
     {
@@ -101,7 +34,6 @@ namespace Nucleus.DeveloperTools.Analyzers
         $"{diagnosticId}_DESCRIPTION"
       );
     }
-
 
     private static DiagnosticDescriptor Create(string diagnosticId, DiagnosticSeverity severity, string category, string titleResourceKey, string messageFormatResourceKey, string descriptionResourceKey)
     {

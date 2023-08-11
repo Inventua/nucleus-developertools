@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Nucleus.DeveloperTools.Analyzers
+namespace Nucleus.DeveloperTools.MSBuild
 {
   /// <summary>
   /// Extensions for the System.Version class.
@@ -111,10 +111,11 @@ namespace Nucleus.DeveloperTools.Analyzers
     /// </summary>
     /// <param name="version"></param>
     /// <returns></returns>
-    static private Version ZeroUndefinedElements(System.Version version)
+    static public Version ZeroUndefinedElements(this System.Version version)
     {
       return new Version(version.Major, version.Minor == -1 ? 0 : version.Minor, version.Build == -1 ? 0 : version.Build, version.Revision == -1 ? 0 : version.Revision);
     }
   }
 }
+
 

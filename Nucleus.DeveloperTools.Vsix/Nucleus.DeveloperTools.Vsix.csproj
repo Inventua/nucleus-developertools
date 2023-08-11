@@ -48,6 +48,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.CodeFixes\Nucleus.DeveloperTools.Analyzers.CodeFixes.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.csproj" />
+    <ProjectReference Include="..\Nucleus.DeveloperTools.MSBuild\Nucleus.DeveloperTools.MSBuild.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudio.TemplateWizard\Nucleus.DeveloperTools.VisualStudio.TemplateWizard.csproj" />
 
     <!--<ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudioTemplates\Nucleus.DeveloperTools.VisualStudioTemplates.csproj" />-->

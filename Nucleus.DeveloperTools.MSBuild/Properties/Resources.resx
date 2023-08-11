@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,17 +117,64 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NUCL300_MESSAGEFORMAT" xml:space="preserve">
-    <value>Controller class '{0}' does not have an [Extension] attribute. A Nucleus.Abstractions.Extension attribute is required to facilitate Nucleus routing.</value>
+  <data name="NUCL001_MESSAGEFORMAT" xml:space="preserve">
+    <value>This project does not contain a valid manifest (package.xml) file.</value>
   </data>
-  <data name="NUCL300_TITLE" xml:space="preserve">
-    <value>Controller class '{0}' does not have an [Extension] attribute.</value>
+  <data name="NUCL001_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
   </data>
-
-  <data name="NUCL301_MESSAGEFORMAT" xml:space="preserve">
-    <value>Controller class '{0}', method '{1}' looks like a controller action which updates data, but neither the '{0}' class or the '{1}' method have an [Authorize] attribute. This may be a security risk because you are not checking user authorization for this action.</value>
+  <data name="NUCL100_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file has an empty Id attribute.</value>
   </data>
-  <data name="NUCL301_TITLE" xml:space="preserve">
-    <value>Missing [Authorize] attribute in controller class '{0}' method '{1}'.</value>
+  <data name="NUCL100_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+  <data name="NUCL103_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file has an invalid Id attribute (value is not a guid).</value>
+  </data>
+  <data name="NUCL103_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+  <data name="NUCL102_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file has an empty version element.</value>
+  </data>
+  <data name="NUCL102_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+  <data name="NUCL104_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file has an invalid version element.  The version element must contain a version number in the format 'major.minor[.build[.revision]]', where build and revision are optional.</value>
+  </data>
+  <data name="NUCL104_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+  <data name="NUCL101_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file has an empty name element.</value>
+  </data>
+  <data name="NUCL101_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+  <data name="NUCL105_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file does not have a &lt;components&gt; element and will not install anything.</value>
+  </data>
+  <data name="NUCL105_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+  <data name="NUCL106_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file does not have any &lt;component&gt; elements and will not install anything.</value>
+  </data>
+  <data name="NUCL106_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+  <data name="NUCL110_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file refers to a file '{0}' which does not exist.</value>
+  </data>
+  <data name="NUCL110_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+  <data name="NUCL200_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your project references version '{1}' of package '{0}' but your manifest (package.xml) file has a compatibility element with a minVersion of {2}, which is less than {1}.  Either update your minVersion to '{1}' or downgrade your reference to '{0}' to version '{2}' or less.</value>
+  </data>
+  <data name="NUCL200_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
   </data>
 </root>
