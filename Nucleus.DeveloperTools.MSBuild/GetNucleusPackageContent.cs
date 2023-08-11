@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-using System.Reflection;
-using System.Threading;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml;
-using System.Runtime.CompilerServices;
 using Nucleus.DeveloperTools.MSBuild.Properties;
-using System.Runtime.InteropServices.ComTypes;
 using Microsoft.Build.Framework;
-using System.Linq.Expressions;
-using Microsoft.Build.Utilities;
 
 namespace Nucleus.DeveloperTools.MSBuild
 {
@@ -22,7 +16,7 @@ namespace Nucleus.DeveloperTools.MSBuild
   /// <example>
   //  <Target Name = "GetPackageContent" DependsOnTargets="ResolveReferences" AfterTargets="PostBuildEvent">
   //    <GetNucleusPackageContent PackageFile = "Package.xml" ProjectFile="$(MSBuildProjectFile)">        
-  //      <Output TaskParameter = "Content" PropertyName="PackageContent" />
+  //      <Output TaskParameter = "Content" ItemName="PackageContent" />
   //    </GetNucleusPackageContent>
   //  </Target>
   //  <UsingTask
@@ -34,15 +28,15 @@ namespace Nucleus.DeveloperTools.MSBuild
   {
     private static string[] NUCLEUS_PACKAGES =
     {
-      "Nucleus.Abstractions",
-      "Nucleus.Extensions",
-      "Nucleus.ViewFeatures",
-      "Nucleus.Data.Common",
-      "Nucleus.Data.EntityFramework",
-      "Nucleus.Data.MySql",
-      "Nucleus.Data.PostgreSql",
-      "Nucleus.Data.Sqlite",
-      "Nucleus.Data.SqlServer"
+      "Inventua.Nucleus.Abstractions",
+      "Inventua.Nucleus.Extensions",
+      "Inventua.Nucleus.ViewFeatures",
+      "Inventua.Nucleus.Data.Common",
+      "Inventua.Nucleus.Data.EntityFramework",
+      "Inventua.Nucleus.Data.MySql",
+      "Inventua.Nucleus.Data.PostgreSql",
+      "Inventua.Nucleus.Data.Sqlite",
+      "Inventua.Nucleus.Data.SqlServer"
     };
     
     private const string MANIFEST_NAMESPACE_PREFIX = "urn:nucleus/schemas/package/";
@@ -139,7 +133,7 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     /// <summary>
-    /// Read values from the manifest (package.xml) file.
+    /// Read the manifest (package.xml) file.
     /// </summary>
     /// <param name="additionalFiles"></param>
     /// <param name="cancellationToken"></param>
@@ -159,17 +153,19 @@ namespace Nucleus.DeveloperTools.MSBuild
       }
     }
 
+    /// <summary>
+    /// Return whether the specified <paramref name="package"/> matches the Nucleus manifest file namespace.
+    /// </summary>
+    /// <param name="package"></param>
+    /// <returns></returns>
     private Boolean IsValidPackage(XDocument package)
     {
       return package.Root.Name.Namespace.NamespaceName.StartsWith(MANIFEST_NAMESPACE_PREFIX);
     }
 
     /// <summary>
-    /// Read values from the manifest (package.xml) file.
+    /// Read the project (.csproj) file.
     /// </summary>
-    /// <param name="additionalFiles"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
     private XDocument ReadProject()
     {
       if (!System.IO.File.Exists(this.ProjectFile.ItemSpec))
@@ -187,7 +183,7 @@ namespace Nucleus.DeveloperTools.MSBuild
 
     /// <summary>
     /// Compare the manifest <compatibility minVersion="n.n.n.n" ... value with the version of referenced well-known 
-    /// Nucleus assemblies and generate a warning if a referenced assembly has a version number which is greater than the
+    /// Nucleus assemblies and generate an error if a referenced assembly has a version number which is greater than the
     /// minVersion value.
     /// </summary>
     /// <param name="references"></param>
@@ -235,7 +231,7 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     /// <summary>
-    /// Check the manifest for an empty id.
+    /// Check the manifest for an empty or invalid id attribute.
     /// </summary>
     /// <param name="references"></param>
     /// <param name="manifest"></param>
@@ -265,7 +261,7 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     /// <summary>
-    /// Check the manifest for an empty name.
+    /// Check the manifest for an empty name element.
     /// </summary>
     /// <param name="references"></param>
     /// <param name="manifest"></param>
@@ -291,7 +287,7 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     /// <summary>
-    /// Check the manifest for an empty version.
+    /// Check the manifest for an empty version or an invalid version format.
     /// </summary>
     /// <param name="references"></param>
     /// <param name="manifest"></param>
@@ -322,7 +318,8 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     /// <summary>
-    /// Check the manifest for an empty version.
+    /// Check that the manifest contains a &lt;components&gt; element and at least one &lt;component&gt; element and
+    /// check that all files referenced in components are present on the file system.  Add files to the result (this.Items).
     /// </summary>
     /// <param name="references"></param>
     /// <param name="manifest"></param>
@@ -374,7 +371,8 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     /// <summary>
-    /// Check that the files in <paramref name="parentElement"/> are present, and add them to the result (this.Items).
+    /// Check that the files in <paramref name="parentElement"/> are present, and add them to the result (this.Items) 
+    /// or log an error if they are not present.
     /// </summary>
     /// <param name="ns"></param>
     /// <param name="parentElement"></param>
@@ -414,6 +412,11 @@ namespace Nucleus.DeveloperTools.MSBuild
       return result;
     }
 
+    /// <summary>
+    /// Log an error for the specified <paramref name="code"/> with no source code location specified.
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="args"></param>
     private void LogError(string code, params object[] args)
     {
       string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT");
@@ -432,6 +435,12 @@ namespace Nucleus.DeveloperTools.MSBuild
       );
     }
 
+    /// <summary>
+    /// Log an error for the specified <paramref name="code"/> and <paramref name="element"/>.
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="element"></param>
+    /// <param name="args"></param>
     private void LogError(string code, XElement element, params object[] args)
     {
       string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT");
@@ -454,6 +463,12 @@ namespace Nucleus.DeveloperTools.MSBuild
       );
      }
 
+    /// <summary>
+    /// Log an error for the specified <paramref name="code"/> and <paramref name="attribute"/>.
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="attribute"></param>
+    /// <param name="args"></param>
     private void LogError(string code, XAttribute attribute, params object[] args)
     {
       string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT");
@@ -476,6 +491,11 @@ namespace Nucleus.DeveloperTools.MSBuild
       );
     }
 
+    /// <summary>
+    /// Return a SourceCodeLocation for the specified <paramref name="element"/> value.
+    /// </summary>
+    /// <param name="element"></param>
+    /// <returns></returns>
     private Models.SourceCodeLocation BuildLocation(XElement element)
     {
       string elementName = element.Name.LocalName;
@@ -494,6 +514,11 @@ namespace Nucleus.DeveloperTools.MSBuild
       };
     }
 
+    /// <summary>
+    /// Return a SourceCodeLocation for the specified <paramref name="attribute"/> value.
+    /// </summary>
+    /// <param name="attribute"></param>
+    /// <returns></returns>
     private Models.SourceCodeLocation BuildLocation(XAttribute attribute)
     {
       string attributeName = attribute.Name.LocalName;
