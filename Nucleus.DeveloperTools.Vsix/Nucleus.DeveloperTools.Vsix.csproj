@@ -16,7 +16,7 @@
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <RootNamespace>Nucleus.DeveloperTools.Vsix</RootNamespace>
     <AssemblyName>Nucleus.DeveloperTools</AssemblyName>
   </PropertyGroup>
@@ -49,7 +49,10 @@
     <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.CodeFixes\Nucleus.DeveloperTools.Analyzers.CodeFixes.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.MSBuild\Nucleus.DeveloperTools.MSBuild.csproj" />
+    <ProjectReference Include="..\Nucleus.DeveloperTools.Shared\Nucleus.DeveloperTools.Shared.csproj" />
+    <ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudio.Commands\Nucleus.DeveloperTools.VisualStudio.Commands.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudio.TemplateWizard\Nucleus.DeveloperTools.VisualStudio.TemplateWizard.csproj" />
+    <ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudioTemplates\Nucleus.DeveloperTools.VisualStudioTemplates.csproj" />
 
     <!--<ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudioTemplates\Nucleus.DeveloperTools.VisualStudioTemplates.csproj" />-->
   </ItemGroup>

@@ -39,6 +39,8 @@
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Layout.zip" />
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Container.zip" />
 
+    <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Shared" Path="|Nucleus.DeveloperTools.Shared|" AssemblyName="|Nucleus.DeveloperTools.Shared;AssemblyName|" />
+    
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|"/>
     <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|"/>
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|"/>
