@@ -46,6 +46,8 @@
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|"/>
     <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|"/>
 
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.VisualStudio.Commands" Path="|Nucleus.DeveloperTools.VisualStudio.Commands;PkgdefProjectOutputGroup|" />
+
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.VisualStudio.TemplateWizard" Path="|Nucleus.DeveloperTools.VisualStudio.TemplateWizard|" AssemblyName="|Nucleus.DeveloperTools.VisualStudio.TemplateWizard;AssemblyName|" />
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.MSBuild" Path="|Nucleus.DeveloperTools.MSBuild|" AssemblyName="|Nucleus.DeveloperTools.MSBuild;AssemblyName|" />
   </Assets>

@@ -52,7 +52,6 @@
     <ProjectReference Include="..\Nucleus.DeveloperTools.Shared\Nucleus.DeveloperTools.Shared.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudio.Commands\Nucleus.DeveloperTools.VisualStudio.Commands.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudio.TemplateWizard\Nucleus.DeveloperTools.VisualStudio.TemplateWizard.csproj" />
-    <ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudioTemplates\Nucleus.DeveloperTools.VisualStudioTemplates.csproj" />
 
     <!--<ProjectReference Include="..\Nucleus.DeveloperTools.VisualStudioTemplates\Nucleus.DeveloperTools.VisualStudioTemplates.csproj" />-->
   </ItemGroup>

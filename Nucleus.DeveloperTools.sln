@@ -14,6 +14,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nucleus.DeveloperTools.Package", "Nucleus.DeveloperTools.Package\Nucleus.DeveloperTools.Package.csproj", "{70C50B41-5331-4199-A9F8-C93DAF9B3736}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nucleus.DeveloperTools.Vsix", "Nucleus.DeveloperTools.Vsix\Nucleus.DeveloperTools.Vsix.csproj", "{D841508E-AEDA-411E-B101-0DCE7FCEEE16}"
+	ProjectSection(ProjectDependencies) = postProject
+		{56C0FBA5-14B7-43D5-8FC2-0F185D45FF68} = {56C0FBA5-14B7-43D5-8FC2-0F185D45FF68}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nucleus.DeveloperTools.VisualStudio.TemplateWizard", "Nucleus.DeveloperTools.VisualStudio.TemplateWizard\Nucleus.DeveloperTools.VisualStudio.TemplateWizard.csproj", "{EE790138-11EE-411C-9759-9B109181AAE2}"
 EndProject
