@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System.Xml;
 using Nucleus.DeveloperTools.MSBuild.Properties;
 using Microsoft.Build.Framework;
+using Nucleus.DeveloperTools.Shared;
 
 namespace Nucleus.DeveloperTools.MSBuild
 {
@@ -39,21 +40,6 @@ namespace Nucleus.DeveloperTools.MSBuild
       "Inventua.Nucleus.Data.SqlServer"
     };
     
-    private const string MANIFEST_NAMESPACE_PREFIX = "urn:nucleus/schemas/package/";
-
-    // manifest (package.xml) elements and attributes
-    private const string MANIFEST_COMPATIBILITY_ELEMENT_NAME = "compatibility";
-    private const string MANIFEST_COMPATIBILITY_ELEMENT_MINVERSION_ATTRIBUTE = "minVersion";
-
-    private const string MANIFEST_PACKAGE_ID_ATTRIBUTE = "id";
-    private const string MANIFEST_PACKAGE_NAME_ELEMENT = "name";
-    private const string MANIFEST_PACKAGE_VERSION_ELEMENT = "version";
-
-    private const string MANIFEST_COMPONENTS_ELEMENT_NAME = "components";
-    private const string MANIFEST_COMPONENT_ELEMENT_NAME = "component";
-
-    private const string MANIFEST_FOLDER_ELEMENT_NAME = "folder";
-    private const string MANIFEST_FILE_ELEMENT_NAME = "file";
 
     // project file (csproj) elements
     private const string PROJECT_PACKAGE_REFERENCE_ELEMENT = "PackageReference";
@@ -88,9 +74,10 @@ namespace Nucleus.DeveloperTools.MSBuild
 
       try
       {
-        XDocument manifest = ReadManifest(this.PackageFile.ItemSpec);
+        //XDocument manifest = ReadManifest();
+        Manifest manifest = Manifest.FromFile(this.PackageFile.ItemSpec);
 
-        if (IsValidPackage(manifest))
+        if (manifest.IsValidPackage())
         {
           if (!AnalyzeManifestMinVersion(manifest))
           {
@@ -133,37 +120,6 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     /// <summary>
-    /// Read the manifest (package.xml) file.
-    /// </summary>
-    /// <param name="additionalFiles"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    private XDocument ReadManifest(string packageFile)
-    {
-      if (!System.IO.File.Exists(packageFile))
-      {
-        throw new FileNotFoundException(packageFile);
-      }
-      else
-      {
-        using (System.IO.Stream stream = System.IO.File.OpenRead(packageFile))
-        {
-          return XDocument.Load(stream, LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace);
-        }
-      }
-    }
-
-    /// <summary>
-    /// Return whether the specified <paramref name="package"/> matches the Nucleus manifest file namespace.
-    /// </summary>
-    /// <param name="package"></param>
-    /// <returns></returns>
-    private Boolean IsValidPackage(XDocument package)
-    {
-      return package.Root.Name.Namespace.NamespaceName.StartsWith(MANIFEST_NAMESPACE_PREFIX);
-    }
-
-    /// <summary>
     /// Read the project (.csproj) file.
     /// </summary>
     private XDocument ReadProject()
@@ -189,18 +145,18 @@ namespace Nucleus.DeveloperTools.MSBuild
     /// <param name="references"></param>
     /// <param name="manifest"></param>
     /// <returns></returns>
-    private Boolean AnalyzeManifestMinVersion(XDocument manifest)
+    private Boolean AnalyzeManifestMinVersion(Manifest manifest)
     {
       Boolean result = true;
             
-      XDocument project = ReadProject();           
+      XDocument project = ReadProject();
 
-      XElement compatibilityElement = manifest.Root.Element(manifest.Root.Name.Namespace + MANIFEST_COMPATIBILITY_ELEMENT_NAME);
+      XElement compatibilityElement = manifest.GetCompatibilityElement();
 
       if (compatibilityElement != null)
       {
         // get and parse the manifest minVersion
-        XAttribute minVersionAttribute = compatibilityElement.Attribute(MANIFEST_COMPATIBILITY_ELEMENT_MINVERSION_ATTRIBUTE);
+        XAttribute minVersionAttribute = compatibilityElement.Attribute(Manifest.COMPATIBILITY_ELEMENT_MINVERSION_ATTRIBUTE);
         System.Version minVersion = minVersionAttribute.Value.Parse(false);
 
         if (!(minVersion.IsEmpty() || minVersionAttribute == null))
@@ -236,14 +192,14 @@ namespace Nucleus.DeveloperTools.MSBuild
     /// <param name="references"></param>
     /// <param name="manifest"></param>
     /// <returns></returns>
-    private Boolean AnalyzeManifestPackageId(XDocument manifest)
+    private Boolean AnalyzeManifestPackageId(Manifest manifest)
     {
       Boolean result = true;
-      XElement packageElement = manifest.Root;
+      XElement packageElement = manifest.GetPackageElement();// Root;
 
       if (packageElement != null)
       {
-        XAttribute packageIdAttribute = packageElement.Attribute(MANIFEST_PACKAGE_ID_ATTRIBUTE);
+        XAttribute packageIdAttribute = packageElement.Attribute(Manifest.PACKAGE_ID_ATTRIBUTE);
 
         if (String.IsNullOrEmpty(packageIdAttribute?.Value))
         {
@@ -266,15 +222,15 @@ namespace Nucleus.DeveloperTools.MSBuild
     /// <param name="references"></param>
     /// <param name="manifest"></param>
     /// <returns></returns>
-    private Boolean AnalyzeManifestPackageName(XDocument manifest)
+    private Boolean AnalyzeManifestPackageName(Manifest manifest)
     {
       Boolean result = true;
 
-      XElement packageElement = manifest.Root;
+      XElement packageElement = manifest.GetPackageElement();
 
       if (packageElement != null)
       {
-        XElement packageNameElement = packageElement.Element(manifest.Root.Name.Namespace + MANIFEST_PACKAGE_NAME_ELEMENT);
+        XElement packageNameElement = manifest.GetElement(packageElement, Manifest.PACKAGE_NAME_ELEMENT);
 
         if (String.IsNullOrWhiteSpace(packageNameElement?.Value))
         {
@@ -292,15 +248,15 @@ namespace Nucleus.DeveloperTools.MSBuild
     /// <param name="references"></param>
     /// <param name="manifest"></param>
     /// <returns></returns>
-    private Boolean AnalyzeManifestPackageVersion(XDocument manifest)
+    private Boolean AnalyzeManifestPackageVersion(Manifest manifest)
     {
       Boolean result = true;
 
-      XElement packageElement = manifest.Root;
+      XElement packageElement = manifest.GetPackageElement();
 
       if (packageElement != null)
       {
-        XElement packageVersionElement = packageElement.Element(manifest.Root.Name.Namespace + MANIFEST_PACKAGE_VERSION_ELEMENT);
+        XElement packageVersionElement = manifest.GetElement(packageElement, Manifest.PACKAGE_VERSION_ELEMENT);
 
         if (String.IsNullOrWhiteSpace(packageVersionElement?.Value))
         {
@@ -324,11 +280,11 @@ namespace Nucleus.DeveloperTools.MSBuild
     /// <param name="references"></param>
     /// <param name="manifest"></param>
     /// <returns></returns>
-    private Boolean AnalyzeManifestComponents(XDocument manifest)
+    private Boolean AnalyzeManifestComponents(Manifest manifest)
     {
       Boolean result = true;
 
-      XElement packageElement = manifest.Root;
+      XElement packageElement = manifest.GetPackageElement();
 
       if (packageElement != null)
       {
@@ -336,7 +292,7 @@ namespace Nucleus.DeveloperTools.MSBuild
         this.Items.Add(new Microsoft.Build.Utilities.TaskItem() { ItemSpec = this.PackageFile.ItemSpec });
 
         // check that there is a <components> element
-        XElement componentsElement = packageElement.Element(manifest.Root.Name.Namespace + MANIFEST_COMPONENTS_ELEMENT_NAME);
+        XElement componentsElement = manifest.GetElement(packageElement, Manifest.COMPONENTS_ELEMENT_NAME);
 
         if (componentsElement == null)
         {
@@ -346,7 +302,7 @@ namespace Nucleus.DeveloperTools.MSBuild
         else
         {
           // check that the <components> element contains at least one <component>
-          IEnumerable<XElement> components = componentsElement.Descendants(manifest.Root.Name.Namespace + MANIFEST_COMPONENT_ELEMENT_NAME);
+          IEnumerable<XElement> components = manifest.GetDescendants(componentsElement, Manifest.COMPONENT_ELEMENT_NAME);
 
           if (!components.Any())
           {
@@ -356,13 +312,7 @@ namespace Nucleus.DeveloperTools.MSBuild
           else
           {
             // check that files exist
-            foreach (XElement component in components)
-            {
-              if (!CheckFileExists(manifest.Root.Name.Namespace, component, ""))
-              {
-                result = false;
-              }
-            }
+            CheckFilesExist(manifest);            
           }
         }
       }
@@ -374,38 +324,25 @@ namespace Nucleus.DeveloperTools.MSBuild
     /// Check that the files in <paramref name="parentElement"/> are present, and add them to the result (this.Items) 
     /// or log an error if they are not present.
     /// </summary>
-    /// <param name="ns"></param>
-    /// <param name="parentElement"></param>
-    /// <param name="path"></param>
+    /// <param name="manifest"></param>
     /// <returns></returns>
-    private Boolean CheckFileExists(XNamespace ns, XElement parentElement, string path)
+    private Boolean CheckFilesExist(Manifest manifest)
     {
       Boolean result = true;
+      string projectPath = System.IO.Path.GetDirectoryName(this.ProjectFile.ItemSpec);
 
-      foreach (XElement fileElement in parentElement.Elements(ns + MANIFEST_FILE_ELEMENT_NAME))
+      foreach (ManifestFile file in manifest.Files)
       {
-        string fileName = System.IO.Path.Combine(path, fileElement.Attribute("name").Value);
+        string fileName = System.IO.Path.Combine(projectPath, file.FileName);
 
         if (System.IO.File.Exists(fileName))
         {
-          this.Items.Add(new Microsoft.Build.Utilities.TaskItem() {  ItemSpec = fileName });
+          this.Items.Add(new Microsoft.Build.Utilities.TaskItem() { ItemSpec = fileName });
         }
         else
         {
-          this.LogError("NUCL110", fileElement, fileName);
+          this.LogError("NUCL110", file.Element, fileName);
           result = false;
-        }
-      }
-
-      foreach (XElement folderElement in parentElement.Elements(ns + MANIFEST_FOLDER_ELEMENT_NAME))
-      {
-        string subFolderName = folderElement.Attribute("name")?.Value;
-        if (!subFolderName.Equals("bin", StringComparison.OrdinalIgnoreCase))
-        {
-          if (!CheckFileExists(ns, folderElement, System.IO.Path.Combine(path, subFolderName)))
-          {
-            result = false;
-          }
         }
       }
 

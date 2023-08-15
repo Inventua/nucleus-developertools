@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Rename;
 using Microsoft.CodeAnalysis.Text;
+using Nucleus.DeveloperTools.Shared;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -76,7 +77,7 @@ namespace Nucleus.DeveloperTools.Analyzers
         root.ReplaceNode
         (
           classDeclaration,
-          classDeclaration.AddAttribute("Extension", new string[] { $"\"{await GetExtensionName(document, cancellationToken)}\"" })
+          classDeclaration.AddAttribute("Extension", new string[] { $"\"{GetExtensionName(document, cancellationToken)}\"" })
       ));
     }
     
@@ -87,41 +88,17 @@ namespace Nucleus.DeveloperTools.Analyzers
     /// <param name="document"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    private async Task<string> GetExtensionName(Document document, CancellationToken cancellationToken)
+    private string GetExtensionName(Document document, CancellationToken cancellationToken)
     {
       const string MANIFEST_FILENAME = "package.xml";
-      XElement extensionElement = null;
-      XElement componentElement = null;
-      XAttribute folderAttribute = null;
-
-      TextDocument packageFile = document.Project.AdditionalDocuments
-        .Where(file => Path.GetFileName(file.Name).Equals(MANIFEST_FILENAME, StringComparison.OrdinalIgnoreCase))
-        .FirstOrDefault();
-
-      if (packageFile != null)
-      {
-        SourceText packageFileText = await packageFile.GetTextAsync(cancellationToken);
-
-        // Write the additional file back to stream and load it into an XDocument.
-        using (MemoryStream stream = new MemoryStream())
-        {
-          using (StreamWriter writer = new StreamWriter(stream, System.Text.Encoding.UTF8, 4096, true))
-          {
-            packageFileText.Write(writer, cancellationToken);
-          }
-
-          stream.Position = 0;
-          XDocument manifest = XDocument.Load(stream, LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace);
-
-          extensionElement = manifest.Descendants(manifest.Root.Name.Namespace + "extension").FirstOrDefault();
-          componentElement = manifest.Descendants(manifest.Root.Name.Namespace + "component").FirstOrDefault();
-          folderAttribute = componentElement.Attribute("folderName");
-
-        }
-      }
+      string projectPath = System.IO.Path.GetDirectoryName(document.Project.FilePath);
+      Manifest manifest = Manifest.FromFile(System.IO.Path.Combine(projectPath, MANIFEST_FILENAME));
+           
+      XElement extensionElement = manifest.GetDescendants(Manifest.EXTENSION_ELEMENT_NAME).FirstOrDefault();
+      XElement componentElement = manifest.GetDescendants(Manifest.COMPONENT_ELEMENT_NAME).FirstOrDefault();
+      XAttribute folderAttribute = componentElement.Attribute("folderName");
 
       return extensionElement?.Value ?? folderAttribute?.Value ?? "your-extension-name";
-      //return extensionElement == null ? "your-extension-name" : extensionElement.Value;
     }
   }
 }

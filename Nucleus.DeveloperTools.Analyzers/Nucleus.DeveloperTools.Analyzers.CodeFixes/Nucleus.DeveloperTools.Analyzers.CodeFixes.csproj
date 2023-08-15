@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Nucleus.DeveloperTools.Shared\Nucleus.DeveloperTools.Shared.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.csproj" />
   </ItemGroup>
 

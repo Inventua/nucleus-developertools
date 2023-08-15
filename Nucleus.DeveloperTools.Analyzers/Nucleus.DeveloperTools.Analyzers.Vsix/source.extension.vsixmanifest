@@ -12,6 +12,7 @@
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
   </Dependencies>
   <Assets>
+    <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Shared" Path="|Nucleus.DeveloperTools.Shared|" AssemblyName="|Nucleus.DeveloperTools.Shared;AssemblyName|" />
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|"/>
     <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|"/>
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|"/>

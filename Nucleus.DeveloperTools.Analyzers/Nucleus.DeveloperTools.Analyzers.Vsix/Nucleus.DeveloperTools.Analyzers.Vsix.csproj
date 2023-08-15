@@ -35,6 +35,7 @@
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Nucleus.DeveloperTools.Shared\Nucleus.DeveloperTools.Shared.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers.CodeFixes\Nucleus.DeveloperTools.Analyzers.CodeFixes.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.csproj" />
   </ItemGroup>
