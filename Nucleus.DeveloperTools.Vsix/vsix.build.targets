@@ -43,15 +43,21 @@
   <Target Name="CopyModuleTargets" BeforeTargets="CoreCompile" Condition="'$(NUCLEUS_PATH)' != ''">
 		<Copy SourceFiles="$(NUCLEUS_PATH)\module.build.targets" DestinationFiles="module.build.targets" OverwriteReadOnlyFiles="true" />
 	</Target>
-	
-	<!--<Target Name="CopyToPublish" AfterTargets="CopyVsixManifestFile" Condition="'$(Configuration)' == 'Release' AND '$(NUCLEUS_PUBLISH_PATH)' != '' ">
-		<Copy SourceFiles="$(TargetVsixContainer)" DestinationFolder="$(NUCLEUS_PUBLISH_PATH)Developer Tools\" Retries="2" />
-		<ZipDirectory SourceDirectory="$(NUCLEUS_PUBLISH_PATH)Developer Tools\" DestinationFile="$(ProjectName).zip" Overwrite="true" />
-		
-		<Delete Files="$(NUCLEUS_PUBLISH_PATH)Developer Tools\$(ProjectName).zip" />
-		<Copy SourceFiles="$(ProjectName).zip" DestinationFolder="$(NUCLEUS_PUBLISH_PATH)Developer Tools" Retries="2" />
 
-	</Target>-->
+  <!-- Copy Nucleus.DeveloperTools.VisualStudio.Commands.pkgdef from the main Nucleus.DeveloperTools.VisualStudio.Commands project -->
+  <!-- because the build tools don't automatically include it in the compiled VSIX when it is part of another project -->
+  <!-- We use the "Include in VSIX" property to included it in the VSIX "manually". -->
+  <Target Name="CopyCommandPackageDefinition" BeforeTargets="CoreCompile">
+    <Copy SourceFiles="..\Nucleus.DeveloperTools.VisualStudio.Commands\bin\$(Configuration)\Nucleus.DeveloperTools.VisualStudio.Commands.pkgdef" DestinationFiles="Nucleus.DeveloperTools.VisualStudio.Commands.pkgdef" OverwriteReadOnlyFiles="true" />
+  </Target>
+	
+  <!-- copy to publish folder -->
+	<Target Name="CopyToPublish" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release' AND '$(NUCLEUS_PUBLISH_PATH)' != '' ">
+		<Copy SourceFiles="$(TargetVsixContainer)" DestinationFolder="$(NUCLEUS_PUBLISH_PATH)Developer Tools\Temp" Retries="2" />
+		<ZipDirectory SourceDirectory="$(NUCLEUS_PUBLISH_PATH)Developer Tools\Temp" DestinationFile="$(NUCLEUS_PUBLISH_PATH)Developer Tools\$(ProjectName).$(PackageVersion).zip" Overwrite="true" />
+		
+		<RemoveDir Directories="$(NUCLEUS_PUBLISH_PATH)Developer Tools\Temp" />	
+	</Target>
 	
 </Project>
 
