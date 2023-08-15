@@ -16,7 +16,7 @@ using System.Xml.XPath;
 namespace Nucleus.DeveloperTools.Analyzers
 {
   /// <summary>
-  /// Analyzer for common Nucleus extension manifest (package.xml) file problems.
+  /// Analyzer for common Nucleus controller class problems.
   /// </summary>
   [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
   public class ControllerAnalyzer : DiagnosticAnalyzer
