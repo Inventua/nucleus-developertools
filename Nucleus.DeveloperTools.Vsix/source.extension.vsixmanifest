@@ -3,7 +3,7 @@
   <Metadata>
     <Identity Id="Nucleus.DeveloperTools.69c392ae-8843-488a-ab8b-ee7937873dcc" Version="1.2.2.0" Language="en-US" Publisher="Nucleus" />
     <DisplayName>Nucleus Developer Tools for Visual Studio</DisplayName>
-    <Description xml:space="preserve">
+    <Description>
       Nucleus Developer Tools.  Visual Studio Templates, Visual Studio Extensions, MSBuild tasks, Analyzers, Code fix providers for Nucleus extension developers.
     </Description>
     <MoreInfo>https://www.nucleus-cms.com/develop-extensions/</MoreInfo>
