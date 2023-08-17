@@ -13,19 +13,18 @@ namespace Nucleus.DeveloperTools.Shared
 {
   public class Manifest
   {
-    //private string FileName { get; set; }    
-    //private XDocument _document { get; set; }
-    private List<ManifestFile> _files {  get; set; }
-
     private const string MANIFEST_NAMESPACE_PREFIX = "urn:nucleus/schemas/package/";
 
     // manifest (package.xml) elements and attributes
-    public const string COMPATIBILITY_ELEMENT_NAME = "compatibility";
-    public const string COMPATIBILITY_ELEMENT_MINVERSION_ATTRIBUTE = "minVersion";
 
     public const string PACKAGE_ID_ATTRIBUTE = "id";
     public const string PACKAGE_NAME_ELEMENT = NAME_ATTRIBUTE_NAME;
     public const string PACKAGE_VERSION_ELEMENT = "version";
+
+    public const string COMPATIBILITY_ELEMENT_NAME = "compatibility";
+    public const string COMPATIBILITY_ELEMENT_MINVERSION_ATTRIBUTE = "minVersion";
+
+    public const string PUBLISHER_ELEMENT_NAME = "publisher";
 
     public const string COMPONENTS_ELEMENT_NAME = "components";
     public const string COMPONENT_ELEMENT_NAME = "component";
@@ -36,6 +35,8 @@ namespace Nucleus.DeveloperTools.Shared
     public const string FILE_ELEMENT_NAME = "file";
 
     public const string NAME_ATTRIBUTE_NAME = "name";
+    public const string EMAIL_ATTRIBUTE_NAME = "email";
+    public const string URL_ATTRIBUTE_NAME = "url";
 
     private Manifest()
     {
@@ -116,6 +117,11 @@ namespace Nucleus.DeveloperTools.Shared
       return this.Document.Root;
     }
 
+    public XElement GetPublisherElement()
+    {
+      return this.Document.Root.Element(this.Namespace + PUBLISHER_ELEMENT_NAME);
+    }
+
     public XElement GetCompatibilityElement()
     {
       return this.Document.Root.Element(this.Namespace + COMPATIBILITY_ELEMENT_NAME);
@@ -138,22 +144,27 @@ namespace Nucleus.DeveloperTools.Shared
     public List<ManifestFile> Files
     {
       get
-      {
-        if (this._files == null)
+      { 
+        List<ManifestFile> results = new List<ManifestFile>();
+ 
+        foreach (XElement component in this.GetComponentsElements())
         {
-          List<ManifestFile> results = new List<ManifestFile>();
-          foreach (XElement component in this.GetComponentsElements())
-          {
-            GetFiles(component, "", results);
-          }
-          this._files = results;
-        }
-        return this._files;
+          results.AddRange(GetFiles(component, ""));
+        } 
+
+        return results; 
       }
     }
           
-    private void GetFiles(XElement parentElement, string path, List<ManifestFile> results)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="parentElement"></param>
+    /// <param name="path"></param>
+    /// <param name="results"></param>
+    private List<ManifestFile> GetFiles(XElement parentElement, string path)
     {
+      List<ManifestFile> results = new List<ManifestFile>();
 
       foreach (XElement fileElement in parentElement.Elements(this.Namespace + FILE_ELEMENT_NAME))
       {
@@ -167,9 +178,11 @@ namespace Nucleus.DeveloperTools.Shared
         string subFolderName = folderElement.Attribute(NAME_ATTRIBUTE_NAME)?.Value;
         if (!subFolderName.Equals("bin", StringComparison.OrdinalIgnoreCase))
         {
-          GetFiles(folderElement, System.IO.Path.Combine(path, subFolderName), results);
+          results.AddRange(GetFiles(folderElement, System.IO.Path.Combine(path, subFolderName)));
         }
       }
+
+      return results;
     }
 
     /// <summary>
@@ -192,18 +205,22 @@ namespace Nucleus.DeveloperTools.Shared
 
       if (folder != null)
       {
-        using (System.Xml.XmlWriter writer = folder.CreateWriter())
+        XElement fileElement = new XElement(XName.Get(FILE_ELEMENT_NAME, this.Namespace.NamespaceName));
+        fileElement.SetAttributeValue(NAME_ATTRIBUTE_NAME, System.IO.Path.GetFileName(relativeFilePath));
+
+        // position the new <file> element before any child <folder> elements
+        XElement existingSubFolder = this.GetElement(folder, FOLDER_ELEMENT_NAME);
+
+        if (existingSubFolder == null)
         {
-          writer.WriteStartElement(FILE_ELEMENT_NAME, this.Namespace.NamespaceName);
-          writer.WriteAttributeString(NAME_ATTRIBUTE_NAME, System.IO.Path.GetFileName(relativeFilePath));
-          writer.WriteEndElement();
+          folder.Add(fileElement);
+        }
+        else
+        {
+          existingSubFolder.AddBeforeSelf(fileElement);
         }
 
-        XElement file = this.GetElements(folder, FILE_ELEMENT_NAME)
-          .Where(elem => elem.Attribute(NAME_ATTRIBUTE_NAME)?.Value.Equals(System.IO.Path.GetFileName(relativeFilePath)) == true)
-          .FirstOrDefault();
-
-        return file;        
+        return fileElement;        
       }
 
       return null;
@@ -218,7 +235,7 @@ namespace Nucleus.DeveloperTools.Shared
     private XElement FindFileFolderElement(string relativeFilePath, Boolean create)
     {
       string path = System.IO.Path.GetDirectoryName(relativeFilePath);
-      string[] pathFolders = path.Split(new char[] {'/' ,'\\'});
+      string[] pathFolders = path.Split(new char[] {'/' ,'\\'}, StringSplitOptions.RemoveEmptyEntries);
       
       if (pathFolders.Length == 0)
       {
@@ -242,16 +259,10 @@ namespace Nucleus.DeveloperTools.Shared
           {
             if (create)
             {
-              using (System.Xml.XmlWriter writer = current.CreateWriter())
-              {
-                writer.WriteStartElement(FOLDER_ELEMENT_NAME, this.Namespace.NamespaceName);
-                writer.WriteAttributeString(NAME_ATTRIBUTE_NAME, pathFolders[pathFoldersIndex]);
-                writer.WriteEndElement();                
-              }
-              
-              current = this.GetElements(current, FOLDER_ELEMENT_NAME)
-                .Where(folder => folder.Attribute(NAME_ATTRIBUTE_NAME)?.Value.Equals(pathFolders[pathFoldersIndex], StringComparison.OrdinalIgnoreCase) == true)
-                .FirstOrDefault();
+              XElement newFolderElement = new XElement(XName.Get(FOLDER_ELEMENT_NAME, this.Namespace.NamespaceName));
+              newFolderElement.SetAttributeValue(NAME_ATTRIBUTE_NAME, pathFolders[pathFoldersIndex]);
+              current.Add(newFolderElement);
+              current = newFolderElement;
             }
             else
             {

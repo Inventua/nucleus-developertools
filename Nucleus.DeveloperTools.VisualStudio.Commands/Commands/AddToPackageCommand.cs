@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.VisualStudio.Shell;
 using EnvDTE80;
+using Microsoft.VisualStudio.PlatformUI;
 
 namespace Nucleus.DeveloperTools.VisualStudio.Commands;
 
@@ -18,12 +19,12 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
 {
   private const string MANIFEST_FILENAME = "package.xml";
 
-  private DateTime? _packageReadDate { get; set; }
-  private List<string> _packageFiles { get; set; }
+  private static readonly Guid PhysicalFile_guid = Guid.Parse("6BB5F8EE-4483-11D3-8BCF-00C04F8EC28C");
+  private static readonly Guid PhysicalFolder_guid =  Guid.Parse("6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C");
 
   private InfoBar InfoBar { get; set; }
   private Boolean IsShowingInfoBar { get; set; }
-  private object lockObj = new();
+  private readonly object lockObj = new();
 
   private EnvDTE80.DTE2 DTE
   {
@@ -44,31 +45,39 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
     {
       string manifestFilePath = System.IO.Path.Combine(projectFolder, MANIFEST_FILENAME);
 
-      Manifest manifest;
       System.Xml.Linq.XElement addedElement = null;
 
       // open the package file and use its contents to create a manifest object.  This handles cases where
       // the user has package.xml open & has edited it but has not saved changes
-      DocumentView view = await VS.Documents.OpenViaProjectAsync(manifestFilePath);      
-      manifest = Manifest.FromString(view.TextBuffer.CurrentSnapshot.GetText());
+      DocumentView view = await VS.Documents.OpenViaProjectAsync(manifestFilePath);
+      Manifest manifest = Manifest.FromString(view.TextBuffer.CurrentSnapshot.GetText());
+      List<ManifestFile> manifestFiles = manifest.Files;
 
       if (!manifest.IsValidPackage()) return;
 
       foreach (string fileToAdd in selectedFiles)
       {
-        if (!manifest.Files.Where(file => file.FileName.Equals(selectedFiles)).Any())
+        if (IsValidFile(fileToAdd) &&  !manifestFiles.Where(file => file.FileName.Equals(fileToAdd)).Any())
         {
-          addedElement = manifest.AddFile(fileToAdd.Substring(projectFolder.Length + 1));
+          addedElement = manifest.AddFile(fileToAdd);
         }
       }
 
       // update package.xml with the changed manifest contents
       view.Document.TextBuffer.Replace(new Microsoft.VisualStudio.Text.Span(0, view.Document.TextBuffer.CurrentSnapshot.Length), manifest.ToString());
-                  
+
       // use the visual studio "format document" command to auto-format the document, because the manifest class (XDocument) does not 
       // "pretty format" with tabs and white space.
       await view.WindowFrame.ShowAsync();
-      await VS.Commands.ExecuteAsync(VSConstants.VSStd2KCmdID.FORMATDOCUMENT, "-1");         
+
+      // The delay is needed because WindowFrame.ShowAsync does not execute immediately, and the format document command doesn't work unless
+      // the windows is visible and activated.
+      JoinableTask task = ThreadHelper.JoinableTaskFactory.StartOnIdle(async () =>
+      {
+        await Task.Delay(100);
+        await VS.Commands.ExecuteAsync(VSConstants.VSStd2KCmdID.FORMATDOCUMENT, "-1");
+      });
+
     }
   }
 
@@ -84,7 +93,6 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
   {
     ThreadHelper.ThrowIfNotOnUIThread();
 
-    List<string> results = new List<string>();
     EnvDTE80.DTE2 dte = this.DTE;
     if (dte.SelectedItems.Count > 0)
     {
@@ -97,32 +105,66 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
   private List<string> GetSelectedFiles(string projectPath)
   {
     ThreadHelper.ThrowIfNotOnUIThread();
-
-    List<string> results = new List<string>();
+    
+    List<string> results = new();
     EnvDTE80.DTE2 dte = this.DTE;
     if (dte.SelectedItems.Count > 0)
     {
+      // get a list of selected files 
 
-      // get a list of files to add to the manifest
       // dte.SelectedItems is 1-based not 0-based.  
       for (int index = 1; index <= dte.SelectedItems.Count; index++)
       {
         SelectedItem selectedItem = dte.SelectedItems.Item(index);
-        string selectedItemFullPath = (string)selectedItem.ProjectItem.Properties.Item("LocalPath").Value;
-        string selectedItemRelativePath = selectedItemFullPath.Substring(projectPath.Length + 1, selectedItemFullPath.Length - projectPath.Length - 1);
-        results.Add(selectedItemFullPath);
+
+        if (Guid.Parse(selectedItem.ProjectItem.Kind) == PhysicalFolder_guid) 
+        {
+          results.AddRange(GetFolderFiles(dte, selectedItem.ProjectItem, projectPath));
+        }
+        else if (Guid.Parse(selectedItem.ProjectItem.Kind) == PhysicalFile_guid)
+        {          
+          results.Add(GetRelativePath(selectedItem.ProjectItem, projectPath));
+        }
       }
     }
 
     return results;
   }
 
-  public Boolean CanExecute()
+  private List<string> GetFolderFiles(EnvDTE80.DTE2 dte, ProjectItem folderItem, string projectPath)
   {
     ThreadHelper.ThrowIfNotOnUIThread();
+
+    List<string> results = new();
+
+    foreach (ProjectItem item in folderItem.ProjectItems)
+    {
+      if (Guid.Parse(item.Kind) == PhysicalFolder_guid)
+      {
+        results.AddRange(GetFolderFiles(dte, item, projectPath));
+      }
+      else if (Guid.Parse(item.Kind) == PhysicalFile_guid)
+      {
+        results.Add(GetRelativePath(item, projectPath));
+      }
+    }
+
+    return results;
+  }
+
+  private string GetRelativePath(ProjectItem projectItem, string projectPath)
+  {
+    ThreadHelper.ThrowIfNotOnUIThread();
+
+    string selectedItemFullPath = (string)projectItem.Properties.Item("LocalPath").Value;
+    return selectedItemFullPath.Substring(projectPath.Length + 1);
+  }
+
+  public Boolean CanExecute()
+  {
     try
     {
-      return !AreAllSelectedFilesInManifest();
+      return AreAnySelectedFilesValidForManifest() && !AreAllSelectedFilesInManifest();
     }
     catch (System.IO.FileNotFoundException)
     {
@@ -145,10 +187,7 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
             Task task = Task.Run(async () =>
             {
               await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-              if (this.InfoBar == null)
-              {
-                this.InfoBar = await CreatePackageErrorInfoBarAsync(ex.Message);
-              }
+              this.InfoBar ??= await CreatePackageErrorInfoBarAsync(ex.Message);
 
               if (!this.InfoBar.IsVisible)
               {
@@ -181,36 +220,34 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
   }
 
   /// <summary>
-  /// Returns whether the selected file is in the package manifest.
+  /// Returns whether all selected files ares in the package manifest already.
   /// </summary>
   /// <returns></returns>
   private Boolean AreAllSelectedFilesInManifest()
   {
     ThreadHelper.ThrowIfNotOnUIThread();
-    EnvDTE80.DTE2 dte = this.DTE;
-    string projectFolder;
-    string manifestFilePath;
 
-    if (dte.SelectedItems.Count == 0)
+    string projectFolder = this.GetProjectPath();
+
+    if (!String.IsNullOrEmpty(projectFolder))
     {
-      return false;
-    }
-
-    projectFolder = System.IO.Path.GetDirectoryName(dte.SelectedItems.Item(1).ProjectItem.ContainingProject.FullName);
-    manifestFilePath = System.IO.Path.Combine(projectFolder, MANIFEST_FILENAME);
-    List<string> packageFiles = this.GetPackageFiles(manifestFilePath);
-
-    // dte.SelectedItems is 1-based not 0-based.  Return false if *any* of the selected items are not in the manifest.
-    for (int index = 1; index <= dte.SelectedItems.Count; index++)
-    {
-      SelectedItem selectedItem = dte.SelectedItems.Item(index);
-
-      string selectedItemFullPath = (string)selectedItem.ProjectItem.Properties.Item("LocalPath").Value;
-      string selectedItemRelativePath = selectedItemFullPath.Substring(projectFolder.Length + 1, selectedItemFullPath.Length - projectFolder.Length - 1);
-
-      if (!packageFiles.Contains(selectedItemRelativePath))
+      
+      DocumentView view = ThreadHelper.JoinableTaskFactory.Run(async delegate
       {
-        return false;
+        string manifestFilePath = System.IO.Path.Combine(projectFolder, MANIFEST_FILENAME);
+        return await VS.Documents.OpenViaProjectAsync(manifestFilePath);
+      });
+
+      Manifest manifest = Manifest.FromString(view.TextBuffer.CurrentSnapshot.GetText());
+      List<string> packageFiles = manifest.Files.Select(file => file.FileName).ToList();
+      List<string> selectedFiles = GetSelectedFiles(projectFolder);
+
+      foreach (string selectedFile in selectedFiles)
+      {
+        if (!packageFiles.Contains(selectedFile))
+        {
+          return false;
+        }
       }
     }
 
@@ -218,27 +255,48 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
   }
 
 
-  List<string> GetPackageFiles(string filename)
+  /// <summary>
+  /// Returns whether the selected file is in the package manifest.
+  /// </summary>
+  /// <returns></returns>
+  private Boolean AreAnySelectedFilesValidForManifest()
   {
-    System.IO.FileInfo fileInfo = new System.IO.FileInfo(filename);
+    ThreadHelper.ThrowIfNotOnUIThread();
 
-    if (!this._packageReadDate.HasValue || this._packageReadDate.Value < fileInfo.LastWriteTimeUtc)
+    string projectFolder = GetProjectPath();
+
+    if (!String.IsNullOrEmpty(projectFolder))
     {
-      this._packageFiles = ReadManifestFiles(filename);
-      this._packageReadDate = DateTime.UtcNow;
+      foreach(string file in GetSelectedFiles(projectFolder))
+      {
+        if (IsValidFile(file)) return true;
+      }
     }
-
-    return this._packageFiles;
+    return false;
   }
 
-  /// <summary>
-  /// Read the manifest (package.xml) file.
-  /// </summary>
-  /// <param name="filename"></param>
-  /// <returns></returns>
-  private List<string> ReadManifestFiles(string filename)
+  Boolean IsValidFile(string fileName)
   {
-    Manifest manifest = Manifest.FromFile(filename);
-    return manifest.Files.Select(file => file.FileName).ToList();
+    // package.xml should not be added to package.xml!
+    if (fileName.Equals(MANIFEST_FILENAME, StringComparison.OrdinalIgnoreCase)) return false;
+
+    switch (System.IO.Path.GetExtension(fileName).ToLower())
+    {
+      case ".cshtml":
+      case ".css":
+      case ".txt":
+      case ".xml":
+      case ".json":
+      case ".png":
+      case ".jpg":
+      case ".gif":
+      case ".js":
+      case ".webp":
+      case ".md":
+        return true;
+
+      default:
+        return false;
+    }
   }
 }

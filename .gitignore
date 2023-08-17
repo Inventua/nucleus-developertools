@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Nucleus.DeveloperTools.VisualStudioTemplates/ProjectTemplates/Complex Extension.zip
+/Nucleus.DeveloperTools.VisualStudioTemplates/ProjectTemplates/Empty Extension.zip
+/Nucleus.DeveloperTools.VisualStudioTemplates/ProjectTemplates/Layout Extension.zip
+/Nucleus.DeveloperTools.VisualStudioTemplates/ProjectTemplates/Simple Extension.zip
+/Nucleus.DeveloperTools.VisualStudioTemplates/ItemTemplates/Container.zip
+/Nucleus.DeveloperTools.VisualStudioTemplates/ItemTemplates/Controller.zip
+/Nucleus.DeveloperTools.VisualStudioTemplates/ItemTemplates/Layout.zip
+/Nucleus.DeveloperTools.VisualStudioTemplates/ItemTemplates/View.zip

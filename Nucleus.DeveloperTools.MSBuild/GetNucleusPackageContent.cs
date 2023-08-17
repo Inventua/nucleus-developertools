@@ -27,7 +27,7 @@ namespace Nucleus.DeveloperTools.MSBuild
   /// </example>
   public class GetNucleusPackageContent : Microsoft.Build.Utilities.Task
   {
-    private static string[] NUCLEUS_PACKAGES =
+    private static readonly string[] NUCLEUS_PACKAGES =
     {
       "Inventua.Nucleus.Abstractions",
       "Inventua.Nucleus.Extensions",
@@ -63,7 +63,7 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     // storage for files detected in package.xml, returned as an array by the Content property.
-    private List<Microsoft.Build.Utilities.TaskItem> Items = new List<Microsoft.Build.Utilities.TaskItem>();
+    private readonly List<Microsoft.Build.Utilities.TaskItem> Items = new List<Microsoft.Build.Utilities.TaskItem>();
 
     /// <summary>
     /// Analyze the manifest (package.xml) file.
@@ -93,6 +93,11 @@ namespace Nucleus.DeveloperTools.MSBuild
           {
             result = false;
           };
+                    
+          if (!AnalyzeManifestPublisher(manifest))
+          {
+            result = false;
+          };
 
           if (!AnalyzeManifestPackageVersion(manifest))
           {
@@ -106,14 +111,16 @@ namespace Nucleus.DeveloperTools.MSBuild
         }
         else
         {
-          LogError("NUCL001");
+          // package.xml is not valid
+          LogError(Resources.NUCL001_CODE);
           result = false;
         }
       }
       catch (Exception ex)
       {
         Log.LogErrorFromException(ex);
-        result = false;
+        // an otherwise-unhandled error (that is, a bug in this class) should not prevent the build from succeeding, so we do not
+        // set result=false here.        
       }
       
       return result;
@@ -164,14 +171,14 @@ namespace Nucleus.DeveloperTools.MSBuild
           foreach (XElement packageReferenceElement in project.Root.Descendants(PROJECT_PACKAGE_REFERENCE_ELEMENT))
           {
             string referenceName = packageReferenceElement.Attribute("Include").Value;
-            System.Version referenceVersion = System.Version.Parse(packageReferenceElement.Attribute("Version").Value).ZeroUndefinedElements();
+            System.Version referenceVersion = packageReferenceElement.Attribute("Version").Value.Parse(true);
 
             // check well-known Nucleus packages
             if (NUCLEUS_PACKAGES.Contains(referenceName, StringComparer.OrdinalIgnoreCase) && !referenceVersion.IsEmpty() && minVersion < referenceVersion)
             {
               this.LogError
               (
-                "NUCL200",
+                Resources.NUCL200_CODE,
                 minVersionAttribute,
                 referenceName,
                 referenceVersion,
@@ -203,12 +210,12 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         if (String.IsNullOrEmpty(packageIdAttribute?.Value))
         {
-          this.LogError("NUCL100", packageIdAttribute);
+          this.LogWarning(Resources.NUCL100_CODE, packageIdAttribute);
           result = false;
         }
         else if (!Guid.TryParse(packageIdAttribute.Value, out Guid _))
         {
-          this.LogError("NUCL103", packageIdAttribute);
+          this.LogWarning(Resources.NUCL103_CODE, packageIdAttribute);
           result = false;
         }
       }
@@ -234,7 +241,7 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         if (String.IsNullOrWhiteSpace(packageNameElement?.Value))
         {
-          this.LogError("NUCL101", packageNameElement);
+          this.LogError(Resources.NUCL101_CODE, packageNameElement);
           result = false;          
         }
       }
@@ -260,14 +267,56 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         if (String.IsNullOrWhiteSpace(packageVersionElement?.Value))
         {
-          this.LogError("NUCL102", packageVersionElement);
+          this.LogError(Resources.NUCL102_CODE, packageVersionElement);
           result = false;
         }
         else if (!Version.TryParse(packageVersionElement.Value, out Version _))
         {
-          this.LogError("NUCL104", packageVersionElement);
+          this.LogError(Resources.NUCL104_CODE, packageVersionElement);
           result = false;
         }
+      }
+
+      return result;
+    }
+
+    /// <summary>
+    /// Check the manifest for an empty publisher name, email or url.
+    /// </summary>
+    /// <param name="references"></param>
+    /// <param name="manifest"></param>
+    /// <returns></returns>
+    private Boolean AnalyzeManifestPublisher(Manifest manifest)
+    {
+      Boolean result = true;
+      XElement publisherElement = manifest.GetPublisherElement();
+
+      if (publisherElement != null)
+      {
+        XAttribute publisherNameAttribute = publisherElement.Attribute(Manifest.NAME_ATTRIBUTE_NAME);
+
+        if (String.IsNullOrEmpty(publisherNameAttribute?.Value))
+        {
+          this.LogWarning(Resources.NUCL210_CODE, publisherNameAttribute);          
+        }
+
+        XAttribute publisherEmailAttribute = publisherElement.Attribute(Manifest.EMAIL_ATTRIBUTE_NAME);
+
+        if (!Guid.TryParse(publisherEmailAttribute.Value, out Guid _))
+        {
+          this.LogWarning(Resources.NUCL211_CODE, publisherEmailAttribute);
+        }
+
+        XAttribute publisherUrlAttribute = publisherElement.Attribute(Manifest.URL_ATTRIBUTE_NAME);
+        
+        if (!Guid.TryParse(publisherUrlAttribute.Value, out Guid _))
+        {
+          this.LogWarning(Resources.NUCL212_CODE, publisherUrlAttribute);
+        }
+      }
+      else
+      {
+        this.LogError(Resources.NUCL213_CODE, manifest.GetPackageElement());
       }
 
       return result;
@@ -296,7 +345,7 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         if (componentsElement == null)
         {
-          this.LogError("NUCL105", packageElement);
+          this.LogError(Resources.NUCL105_CODE, packageElement);
           result = false;
         }
         else
@@ -306,7 +355,7 @@ namespace Nucleus.DeveloperTools.MSBuild
 
           if (!components.Any())
           {
-            this.LogError("NUCL106", componentsElement);
+            this.LogError(Resources.NUCL106_CODE, componentsElement);
             result = false;
           }
           else
@@ -341,7 +390,7 @@ namespace Nucleus.DeveloperTools.MSBuild
         }
         else
         {
-          this.LogError("NUCL110", file.Element, fileName);
+          this.LogError(Resources.NUCL110_CODE, file.Element, fileName);
           result = false;
         }
       }
@@ -380,8 +429,8 @@ namespace Nucleus.DeveloperTools.MSBuild
     /// <param name="args"></param>
     private void LogError(string code, XElement element, params object[] args)
     {
-      string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT");
-      string category = Resources.ResourceManager.GetString($"{code}_CATEGORY");
+      string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT") ?? "";
+      string category = Resources.ResourceManager.GetString($"{code}_CATEGORY") ?? "";
 
       Models.SourceCodeLocation location = BuildLocation(element);
       Log.LogError
@@ -408,11 +457,39 @@ namespace Nucleus.DeveloperTools.MSBuild
     /// <param name="args"></param>
     private void LogError(string code, XAttribute attribute, params object[] args)
     {
-      string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT");
-      string category = Resources.ResourceManager.GetString($"{code}_CATEGORY");
+      string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT") ?? "";
+      string category = Resources.ResourceManager.GetString($"{code}_CATEGORY") ?? "";
 
       Models.SourceCodeLocation location = BuildLocation(attribute);
       Log.LogError
+      (
+        subcategory: category,
+        code,
+        code,
+        DEVELOPER_TOOLS_ERROR_REFERENCE_URL,
+        this.PackageFile.ItemSpec,
+        location.StartLineNumber,
+        location.StartColumnNumber,
+        location.EndLineNumber,
+        location.EndColumnNumber,
+        message,
+        args
+      );
+    }
+
+    /// <summary>
+    /// Log a warning for the specified <paramref name="code"/> and <paramref name="attribute"/>.
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="attribute"></param>
+    /// <param name="args"></param>
+    private void LogWarning(string code, XAttribute attribute, params object[] args)
+    {
+      string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT") ?? "";
+      string category = Resources.ResourceManager.GetString($"{code}_CATEGORY") ?? "";
+
+      Models.SourceCodeLocation location = BuildLocation(attribute);
+      Log.LogWarning
       (
         subcategory: category,
         code,

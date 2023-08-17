@@ -8,7 +8,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.Commands
     internal sealed partial class Vsix
     {
         public const string Id = "Nucleus.DeveloperTools.VisualStudio.Commands.b8f37620-c532-4e67-be3f-fc4199eaaa54";
-        public const string Name = "Nucleus.DeveloperTools.VisualStudio.Commands";
+        public const string Name = "Nucleus Developer Tools for Visual Studio";
         public const string Description = @"Visual Studio Commands for Nucleus.";
         public const string Language = "en-US";
         public const string Version = "1.0";

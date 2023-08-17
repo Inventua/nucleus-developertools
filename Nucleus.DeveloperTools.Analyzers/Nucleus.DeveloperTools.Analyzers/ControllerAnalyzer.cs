@@ -21,7 +21,7 @@ namespace Nucleus.DeveloperTools.Analyzers
   [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
   public class ControllerAnalyzer : DiagnosticAnalyzer
   {
-    private static string[] ADMIN_METHODS = { "Save", "Delete", "Remove" };
+    private static readonly string[] ADMIN_METHODS = { "Save", "Delete", "Remove" };
 
     public static readonly ImmutableArray<DiagnosticDescriptor> MESSAGES = ImmutableArray.Create
     (
@@ -51,8 +51,7 @@ namespace Nucleus.DeveloperTools.Analyzers
     /// <param name="context"></param>
     private static void AnalyzeSymbols(SymbolAnalysisContext context)
     {
-      INamedTypeSymbol symbol = context.Symbol as INamedTypeSymbol;
-      if (symbol != null && symbol.DeclaredAccessibility.HasFlag(Accessibility.Public))
+      if (context.Symbol is INamedTypeSymbol symbol && symbol.DeclaredAccessibility.HasFlag(Accessibility.Public))
       {
         // report a warning if there are controller classes which don't have an [Extension] attribute.
         if (SymbolEqualityComparer.Default.Equals(symbol.BaseType, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Controller")))
@@ -79,7 +78,7 @@ namespace Nucleus.DeveloperTools.Analyzers
           .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Authorization.AuthorizeAttribute")))
           .Any())
         {
-          CheckMethodAuthentication(context, symbol, ADMIN_METHODS);
+          CheckMethodAuthentication(context, symbol);
         }
       }
     }
@@ -92,7 +91,7 @@ namespace Nucleus.DeveloperTools.Analyzers
     /// <param name="context"></param>
     /// <param name="classSymbol"></param>
     /// <param name="methodNamePart"></param>
-    private static void CheckMethodAuthentication(SymbolAnalysisContext context, INamedTypeSymbol classSymbol, IEnumerable<string> methodNameParts)
+    private static void CheckMethodAuthentication(SymbolAnalysisContext context, INamedTypeSymbol classSymbol)
     {
       // Check if a method exists which matches any of the "well known" method name parts and is public
       foreach (ISymbol methodSymbol in classSymbol.GetMembers()

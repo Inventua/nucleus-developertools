@@ -77,7 +77,7 @@ namespace Nucleus.DeveloperTools.Analyzers
         root.ReplaceNode
         (
           classDeclaration,
-          classDeclaration.AddAttribute("Extension", new string[] { $"\"{GetExtensionName(document, cancellationToken)}\"" })
+          classDeclaration.AddAttribute("Extension", new string[] { $"\"{GetExtensionName(document)}\"" })
       ));
     }
     
@@ -88,7 +88,7 @@ namespace Nucleus.DeveloperTools.Analyzers
     /// <param name="document"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    private string GetExtensionName(Document document, CancellationToken cancellationToken)
+    private string GetExtensionName(Document document)
     {
       const string MANIFEST_FILENAME = "package.xml";
       string projectPath = System.IO.Path.GetDirectoryName(document.Project.FilePath);

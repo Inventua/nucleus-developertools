@@ -117,11 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+
+  <data name="NUCL001_CODE" xml:space="preserve">
+    <value>NUCL001</value>
+  </data>
   <data name="NUCL001_MESSAGEFORMAT" xml:space="preserve">
     <value>This project does not contain a valid manifest (package.xml) file.</value>
   </data>
   <data name="NUCL001_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
+  </data>
+
+  <data name="NUCL100_CODE" xml:space="preserve">
+    <value>NUCL100</value>
   </data>
   <data name="NUCL100_MESSAGEFORMAT" xml:space="preserve">
     <value>Your manifest (package.xml) file has an empty Id attribute.</value>
@@ -129,11 +137,19 @@
   <data name="NUCL100_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
   </data>
+  
+  <data name="NUCL103_CODE" xml:space="preserve">
+    <value>NUCL103</value>
+  </data>
   <data name="NUCL103_MESSAGEFORMAT" xml:space="preserve">
     <value>Your manifest (package.xml) file has an invalid Id attribute (value is not a guid).</value>
   </data>
   <data name="NUCL103_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
+  </data>
+
+  <data name="NUCL102_CODE" xml:space="preserve">
+    <value>NUCL102</value>
   </data>
   <data name="NUCL102_MESSAGEFORMAT" xml:space="preserve">
     <value>Your manifest (package.xml) file has an empty version element.</value>
@@ -141,11 +157,19 @@
   <data name="NUCL102_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
   </data>
+
+  <data name="NUCL104_CODE" xml:space="preserve">
+    <value>NUCL104</value>
+  </data>
   <data name="NUCL104_MESSAGEFORMAT" xml:space="preserve">
     <value>Your manifest (package.xml) file has an invalid version element.  The version element must contain a version number in the format 'major.minor[.build[.revision]]', where build and revision are optional.</value>
   </data>
   <data name="NUCL104_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
+  </data>
+
+  <data name="NUCL101_CODE" xml:space="preserve">
+    <value>NUCL101</value>
   </data>
   <data name="NUCL101_MESSAGEFORMAT" xml:space="preserve">
     <value>Your manifest (package.xml) file has an empty name element.</value>
@@ -153,11 +177,19 @@
   <data name="NUCL101_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
   </data>
+
+  <data name="NUCL105_CODE" xml:space="preserve">
+    <value>NUCL105</value>
+  </data>
   <data name="NUCL105_MESSAGEFORMAT" xml:space="preserve">
     <value>Your manifest (package.xml) file does not have a &lt;components&gt; element and will not install anything.</value>
   </data>
   <data name="NUCL105_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
+  </data>
+
+  <data name="NUCL106_CODE" xml:space="preserve">
+    <value>NUCL106</value>
   </data>
   <data name="NUCL106_MESSAGEFORMAT" xml:space="preserve">
     <value>Your manifest (package.xml) file does not have any &lt;component&gt; elements and will not install anything.</value>
@@ -165,11 +197,59 @@
   <data name="NUCL106_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
   </data>
+
+  <data name="NUCL110_CODE" xml:space="preserve">
+    <value>NUCL110</value>
+  </data>
   <data name="NUCL110_MESSAGEFORMAT" xml:space="preserve">
     <value>Your manifest (package.xml) file refers to a file '{0}' which does not exist.</value>
   </data>
   <data name="NUCL110_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
+  </data>
+
+  <data name="NUCL210_CODE" xml:space="preserve">
+    <value>NUCL210</value>
+  </data>  
+  <data name="NUCL210_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) publisher element has a blank name.</value>
+  </data>
+  <data name="NUCL210_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+
+  <data name="NUCL211_CODE" xml:space="preserve">
+    <value>NUCL211</value>
+  </data>
+  <data name="NUCL211_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) publisher element has a blank email address.</value>
+  </data>
+  <data name="NUCL211_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+
+  <data name="NUCL212_CODE" xml:space="preserve">
+    <value>NUCL212</value>
+  </data>
+  <data name="NUCL212_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) publisher element has a blank url.</value>
+  </data>
+  <data name="NUCL212_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+
+  <data name="NUCL213_CODE" xml:space="preserve">
+    <value>NUCL213</value>
+  </data>
+  <data name="NUCL213_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file does not have a publisher element.</value>
+  </data>
+  <data name="NUCL213_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+
+  <data name="NUCL200_CODE" xml:space="preserve">
+    <value>NUCL200</value>
   </data>
   <data name="NUCL200_MESSAGEFORMAT" xml:space="preserve">
     <value>Your project references version '{1}' of package '{0}' but your manifest (package.xml) file has a compatibility element with a minVersion of {2}, which is less than {1}.  Either update your minVersion to '{1}' or downgrade your reference to '{0}' to version '{2}' or less.</value>

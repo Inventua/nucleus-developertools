@@ -9,7 +9,10 @@
   <Commands package="NucleusCommandsPackage">
     <Groups>      
       <Group guid="NucleusCommandsPackage" id="NucleusSolutionItemsCommands" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />        
+      </Group>
+      <Group guid="NucleusCommandsPackage" id="NucleusSolutionItemsCommands" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE" />        
       </Group>
     </Groups>
 
@@ -28,7 +31,6 @@
           <ButtonText>Add to Package</ButtonText>
           <LocCanonicalName>.Nucleus.DeveloperTools.VisualStudio.Commands.AddToPackageCommand</LocCanonicalName>
         </Strings>
-
       </Button>
     </Buttons>
 
