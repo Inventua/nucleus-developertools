@@ -302,14 +302,14 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         XAttribute publisherEmailAttribute = publisherElement.Attribute(Manifest.EMAIL_ATTRIBUTE_NAME);
 
-        if (!Guid.TryParse(publisherEmailAttribute.Value, out Guid _))
+        if (String.IsNullOrEmpty(publisherEmailAttribute.Value))
         {
           this.LogWarning(Resources.NUCL211_CODE, publisherEmailAttribute);
         }
 
         XAttribute publisherUrlAttribute = publisherElement.Attribute(Manifest.URL_ATTRIBUTE_NAME);
         
-        if (!Guid.TryParse(publisherUrlAttribute.Value, out Guid _))
+        if (String.IsNullOrEmpty(publisherUrlAttribute.Value))
         {
           this.LogWarning(Resources.NUCL212_CODE, publisherUrlAttribute);
         }
