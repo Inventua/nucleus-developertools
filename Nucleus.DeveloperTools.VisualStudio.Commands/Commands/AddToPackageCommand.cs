@@ -50,6 +50,13 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
       // open the package file and use its contents to create a manifest object.  This handles cases where
       // the user has package.xml open & has edited it but has not saved changes
       DocumentView view = await VS.Documents.OpenViaProjectAsync(manifestFilePath);
+
+      if (view == null)
+      {
+        // no package.xml file exists
+        return;
+      }
+
       Manifest manifest = Manifest.FromString(view.TextBuffer.CurrentSnapshot.GetText());
       List<ManifestFile> manifestFiles = manifest.Files;
 
@@ -164,7 +171,7 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
   {
     try
     {
-      return AreAnySelectedFilesValidForManifest() && !AreAllSelectedFilesInManifest();
+      return IsNucleusProject() && AreAnySelectedFilesValidForManifest() && !AreAllSelectedFilesInManifest();
     }
     catch (System.IO.FileNotFoundException)
     {
@@ -254,6 +261,29 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
     return true;
   }
 
+  /// <summary>
+  /// Returns whether the project has a package.xml file at the project root.
+  /// </summary>
+  /// <returns></returns>
+  private Boolean IsNucleusProject()
+  {
+    ThreadHelper.ThrowIfNotOnUIThread();
+
+    string projectFolder = GetProjectPath();
+    DocumentView view = ThreadHelper.JoinableTaskFactory.Run(async delegate
+    {
+      string manifestFilePath = System.IO.Path.Combine(projectFolder, MANIFEST_FILENAME);
+      return await VS.Documents.OpenViaProjectAsync(manifestFilePath);
+    });
+
+    if (view != null)
+    {
+      // package.xml file exists
+      return true;
+    }
+    
+    return false;
+  }
 
   /// <summary>
   /// Returns whether the selected file is in the package manifest.
