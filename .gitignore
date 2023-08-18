@@ -369,3 +369,12 @@ FodyWeavers.xsd
 /Nucleus.DeveloperTools.VisualStudioTemplates/ItemTemplates/Controller.zip
 /Nucleus.DeveloperTools.VisualStudioTemplates/ItemTemplates/Layout.zip
 /Nucleus.DeveloperTools.VisualStudioTemplates/ItemTemplates/View.zip
+/Nucleus.DeveloperTools.Vsix/ItemTemplates/Container.zip
+/Nucleus.DeveloperTools.Vsix/ItemTemplates/Controller.zip
+/Nucleus.DeveloperTools.Vsix/ItemTemplates/Layout.zip
+/Nucleus.DeveloperTools.Vsix/ItemTemplates/View.zip
+/Nucleus.DeveloperTools.Vsix/ProjectTemplates/Complex Extension.zip
+/Nucleus.DeveloperTools.Vsix/ProjectTemplates/Empty Extension.zip
+/Nucleus.DeveloperTools.Vsix/ProjectTemplates/Layout Extension.zip
+/Nucleus.DeveloperTools.Vsix/ProjectTemplates/Simple Extension.zip
+/Nucleus.DeveloperTools.Vsix/module.build.targets
