@@ -1,7 +1,7 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
     <Name>Nucleus Simple Extension Project</Name>
-    <Description>Visual Studio project template for a simple Nucleus Extension, including view models and views, but with no data provider or manager class.  Use this template to create a simple extension which does not have its own database objects.  Complex extensions should use the complex Nucleus extension template.</Description>
+    <Description>Visual Studio project template for a simple Nucleus Extension, including view models and views, but with no data provider or manager class.  Use this template to create a simple extension which does not have its own database objects.</Description>
     <ProjectType>CSharp</ProjectType>
     <ProjectSubType>Nucleus</ProjectSubType>
     <SortOrder>1001</SortOrder>
