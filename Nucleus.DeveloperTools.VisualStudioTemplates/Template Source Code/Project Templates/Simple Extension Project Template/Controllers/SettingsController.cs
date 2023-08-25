@@ -15,12 +15,12 @@ namespace $nucleus.extension.namespace$.Controllers
 {
 	[Extension("$nucleus.extension.name$")]
 	[Authorize(Policy = Nucleus.Abstractions.Authorization.Constants.MODULE_EDIT_POLICY)]
-	public class $nucleus.extension.name$AdminController : Controller
+	public class $nucleus.extension.name$SettingsController : Controller
 	{
 		private Context Context { get; }
 		private IPageModuleManager PageModuleManager { get; }
 		
-		public $nucleus.extension.name$AdminController(Context Context, IPageModuleManager pageModuleManager)
+		public $nucleus.extension.name$SettingsController(Context Context, IPageModuleManager pageModuleManager)
 		{
 			this.Context = Context;
 			this.PageModuleManager = pageModuleManager;	

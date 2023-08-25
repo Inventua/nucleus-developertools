@@ -14,13 +14,13 @@ using $defaultnamespace$.Models;
 namespace $defaultnamespace$.Controllers
 {
 	[Extension("$nucleus.extension.name$")]
-	public class $fileinputname$ViewerController : Controller
+	public class $fileinputname$Controller : Controller
 	{
 		private Context Context { get; }
 		private IPageModuleManager PageModuleManager { get; }
 		private $nucleus.extension.name$Manager $nucleus.extension.name$Manager { get; }
 
-    public $fileinputname$ViewerController(Context Context, IPageModuleManager pageModuleManager, $nucleus.extension.name$Manager $nucleus.extension.name.camelcase$Manager)
+    public $fileinputname$Controller(Context Context, IPageModuleManager pageModuleManager, $nucleus.extension.name$Manager $nucleus.extension.name.camelcase$Manager)
 		{
 			this.Context = Context;
 			this.PageModuleManager = pageModuleManager;
@@ -30,12 +30,12 @@ namespace $defaultnamespace$.Controllers
 		[HttpGet]
 		public ActionResult Index()
 		{
-			return View("Viewer", BuildViewModel());
+			return View("$fileinputname$", BuildViewModel());
 		}
 
-		private ViewModels.Viewer BuildViewModel()
+		private ViewModels.$fileinputname$ BuildViewModel()
 		{
-			ViewModels.Viewer viewModel = new();
+			ViewModels.$fileinputname$ viewModel = new();
 
 			viewModel.GetSettings(this.Context.Module);
 			return viewModel;
