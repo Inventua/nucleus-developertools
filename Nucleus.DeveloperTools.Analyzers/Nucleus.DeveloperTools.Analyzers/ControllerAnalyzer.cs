@@ -58,19 +58,33 @@ namespace Nucleus.DeveloperTools.Analyzers
           // report a warning if there are controller classes which don't have an [Extension] attribute.
           if (SymbolEqualityComparer.Default.Equals(symbol.BaseType, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Controller")))
           {
-            if (!symbol.GetAttributes()
+            ImmutableArray<AttributeData> symbolAttributes = symbol.GetAttributes();
+
+            if (!symbolAttributes
               .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Nucleus.Abstractions.ExtensionAttribute")))
               .Any())
             {
-              context.ReportDiagnostic
-              (
-                Diagnostic.Create
-                (
-                  DiagnosticMessages.CONTROLLER_NO_EXTENSION_ATTRIBUTE,
-                  symbol.Locations.FirstOrDefault(),
-                  symbol.Name
-                )
-              );
+              // don't display a warning if the controller has an [ApiController] attribute
+              if (!symbolAttributes
+               .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.ApiControllerAttribute")))
+               .Any())
+              {
+                // don't display a warning if the controller has an [ApiController] attribute
+                if (!symbolAttributes
+                 .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.RouteAttribute")))
+                 .Any())
+                {
+                  context.ReportDiagnostic
+                  (
+                    Diagnostic.Create
+                    (
+                      DiagnosticMessages.CONTROLLER_NO_EXTENSION_ATTRIBUTE,
+                      symbol.Locations.FirstOrDefault(),
+                      symbol.Name
+                    )
+                  );
+                }
+              }
             }
           }
 
