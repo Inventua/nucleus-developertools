@@ -12,6 +12,10 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.CodeAnalysis.Shared.Extensions;
+using System.Security.AccessControl;
+
+//https://github.com/dotnet/roslyn/blob/0c933d5b15cf01be78814cac04c6259da63be480/src/Workspaces/SharedUtilitiesAndExtensions/Compiler/Core/Extensions/ITypeSymbolExtensions.cs#L112
 
 namespace Nucleus.DeveloperTools.Analyzers
 {
@@ -51,81 +55,87 @@ namespace Nucleus.DeveloperTools.Analyzers
     /// <param name="context"></param>
     private static void AnalyzeSymbols(SymbolAnalysisContext context)
     {
-      if (IsNucleusExtension(context.Symbol.Locations))
+      if (context.Symbol is INamedTypeSymbol symbol && symbol.DeclaredAccessibility.HasFlag(Accessibility.Public) && !symbol.IsAbstract)
       {
-        if (context.Symbol is INamedTypeSymbol symbol && symbol.DeclaredAccessibility.HasFlag(Accessibility.Public))
+        if (IsNucleusExtension(context.Symbol.Locations))
         {
-          // report a warning if there are controller classes which don't have an [Extension] attribute.
-          if (SymbolEqualityComparer.Default.Equals(symbol.BaseType, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Controller")))
+          // run Analyzers for controller classes.
+          //if (SymbolEqualityComparer.Default.Equals(symbol.BaseType, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Controller")))
+          if (InheritsOrIsType(symbol.BaseType, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Controller")))            
           {
-            ImmutableArray<AttributeData> symbolAttributes = symbol.GetAttributes();
+            CheckExtension(context, symbol);
 
-            if (!symbolAttributes
-              .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Nucleus.Abstractions.ExtensionAttribute")))
-              .Any())
-            {
-              // don't display a warning if the controller has an [ApiController] attribute
-              if (!symbolAttributes
-               .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.ApiControllerAttribute")))
-               .Any())
-              {
-                // don't display a warning if the controller has an [ApiController] attribute
-                if (!symbolAttributes
-                 .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.RouteAttribute")))
-                 .Any())
-                {
-                  context.ReportDiagnostic
-                  (
-                    Diagnostic.Create
-                    (
-                      DiagnosticMessages.CONTROLLER_NO_EXTENSION_ATTRIBUTE,
-                      symbol.Locations.FirstOrDefault(),
-                      symbol.Name
-                    )
-                  );
-                }
-              }
-            }
-          }
-
-          // report an information message if the class has a method generally associated with an "admin" action (save/delete),
-          // and there is no [Authorize] attribute at the class level or on the method.
-          if (!symbol.GetAttributes()
-            .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Authorization.AuthorizeAttribute")))
-            .Any())
-          {
+            // report an information message if the class has a method generally associated with an "admin" action (save/delete),
+            // and there is no [Authorize] attribute at the class level or on the method.
             CheckMethodAuthentication(context, symbol);
           }
         }
       }
     }
 
+    /// <summary>
+    // Report a warning message if the specified class does not have an [Extension] attribute, and does not have an [ApiController] or [Route] attribute.
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="classSymbol"></param>
+    private static void CheckExtension(SymbolAnalysisContext context, INamedTypeSymbol classSymbol)
+    {
+      ImmutableArray<AttributeData> symbolAttributes = classSymbol.GetAttributes();
+      //.Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Nucleus.Abstractions.ExtensionAttribute")))
+      
+      //if (!symbolAttributes
+      //  .Where(attr => attr.AttributeClass.FindImplementationForInterfaceMember(context.Compilation.GetTypeByMetadataName("Nucleus.Abstractions.ExtensionAttribute")) != null)        
+      //  .Any())
+      if (!symbolAttributes
+        .Where(attr => InheritsOrIsType(attr.AttributeClass,context.Compilation.GetTypeByMetadataName("Nucleus.Abstractions.ExtensionAttribute")))
+        .Any())
+      {
+        // don't display a warning if the controller has an [ApiController] attribute
+        if (!symbolAttributes
+         .Where(attr =>
+           InheritsOrIsType(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.ApiControllerAttribute")) ||
+           InheritsOrIsType(attr.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.RouteAttribute"))
+        ).Any())
+        {
+          context.ReportDiagnostic
+          (
+            Diagnostic.Create
+            (
+              DiagnosticMessages.CONTROLLER_NO_EXTENSION_ATTRIBUTE,
+              classSymbol.Locations.FirstOrDefault(),
+              classSymbol.Name
+            )
+          );
+        }
+      }
+
+    }
 
     /// <summary>
-    /// Report an information message if the specified method contains the specified value, is public and does not have 
-    /// an [Authorize] attribute.
+    /// Report an information message if the class has a method name which contains one of the "well known" data-update values, has a Http Method attribute, and does not have 
+    /// an attribute which implements IAuthorizationFilter (like the [Authorize] attribute).
     /// </summary>
     /// <param name="context"></param>
     /// <param name="classSymbol"></param>
     /// <param name="methodNamePart"></param>
     private static void CheckMethodAuthentication(SymbolAnalysisContext context, INamedTypeSymbol classSymbol)
     {
-      if (IsNucleusExtension(classSymbol.Locations))
+      // if the class does not have any attribute which is derived from IAuthorizationFilter
+      if (!classSymbol.GetAttributes()
+        .Where(attribute => Implements(attribute.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Filters.IAuthorizationFilter"))).Any())
       {
         // Check if a method exists which matches any of the "well known" method name parts and is public
         foreach (ISymbol methodSymbol in classSymbol.GetMembers()
-          .Where(member => member.DeclaredAccessibility.HasFlag(Accessibility.Public))
-          .Where(member => ContainsAny(member.Name, ADMIN_METHODS)))
+        .Where(member => member.DeclaredAccessibility.HasFlag(Accessibility.Public) && ContainsAny(member.Name, ADMIN_METHODS)))
         {
           // Check if the method has an attribute derived from HttpMethodAttribute (like [HttpPost])
           if (methodSymbol.GetAttributes()
-              .Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass.BaseType, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Routing.HttpMethodAttribute")))
+              .Where(attribute => InheritsOrIsType(attribute.AttributeClass.BaseType, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Routing.HttpMethodAttribute")))
               .Any())
           {
-            // Check if the method does not have an [Authorize] attribute
+            // Check if the method does not have an attribute which is derived from IAuthorizationFilter
             if (!methodSymbol.GetAttributes()
-              .Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Authorization.AuthorizeAttribute")))
-              .Any())
+              .Where(attribute => Implements(attribute.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Filters.IAuthorizationFilter"))).Any())
             {
               context.ReportDiagnostic
               (
@@ -168,6 +178,26 @@ namespace Nucleus.DeveloperTools.Analyzers
 #pragma warning restore RS1035 // Do not use APIs banned for analyzers
 
       return FindPackageFile(System.IO.Path.GetDirectoryName(path));
+    }
+
+		private static Boolean Implements(INamedTypeSymbol symbol, INamedTypeSymbol interfaceType)
+    {
+			return symbol.AllInterfaces.Where(type => SymbolEqualityComparer.Default.Equals(type, interfaceType)).Any();       
+    }
+
+    private static Boolean InheritsOrIsType(INamedTypeSymbol symbol, INamedTypeSymbol baseType)
+    {
+      return GetBaseTypesAndThis(symbol).Where(originalType => SymbolEqualityComparer.Default.Equals(originalType, baseType)).Any();
+    }
+
+    public static IEnumerable<INamedTypeSymbol> GetBaseTypesAndThis(INamedTypeSymbol type)
+    {
+      var current = type;
+      while (current != null)
+      {
+        yield return current;
+        current = current.BaseType;
+      }
     }
 
     private static Boolean ContainsAny(string part, IEnumerable<string> values)

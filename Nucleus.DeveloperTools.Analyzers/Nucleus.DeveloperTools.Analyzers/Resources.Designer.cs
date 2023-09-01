@@ -79,7 +79,7 @@ namespace Nucleus.DeveloperTools.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Controller class &apos;{0}&apos;, method &apos;{1}&apos; looks like a controller action which updates data, but neither the &apos;{0}&apos; class or the &apos;{1}&apos; method have an [Authorize] attribute. This may be a security risk because you are not checking user authorization for this action..
+        ///   Looks up a localized string similar to Controller class &apos;{0}&apos;, method &apos;{1}&apos; looks like a controller action which updates data, but neither the &apos;{0}&apos; class or the &apos;{1}&apos; method have an [Authorize] attribute, or another attribute which implements IAuthorizationFilter. This may be a security risk because you are not checking user authorization for this action..
         /// </summary>
         internal static string NUCL301_MESSAGEFORMAT {
             get {

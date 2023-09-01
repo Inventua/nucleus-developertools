@@ -4,13 +4,10 @@
     This project creates the production install set (VSIX) which includes the templates, analyzers and code fix providers all 
     in one package.
   -->
+  <Import Project="..\Nucleus.DeveloperTools.Vsix\developertools.build.targets" />
+  
   <PropertyGroup>
-    <VersionPrefix>1.2.2.0</VersionPrefix>
-    <!--<VersionSuffix>a3</VersionSuffix>-->
-    <Authors>Inventua Pty Ltd</Authors>
-    <Product>Nucleus</Product>
     <AssemblyTitle>Nucleus Developer Tools</AssemblyTitle>
-    <Copyright>(c) Inventua Pty Ptd</Copyright>
   </PropertyGroup>
   
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />

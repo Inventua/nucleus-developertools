@@ -9,11 +9,12 @@ Visual Studio.  Choose the "Visual Studio extension development" workload in the
 https://marketplace.visualstudio.com/items?itemName=MadsKristensen.ExtensibilityEssentials2022
 
 DEBUGGING
-1. You can debug the Analyzers and Code Fix providers in isolation by running the "Nucleus.DeveloperTools.Analyzers.Vsix" project.
-2. You can debug the Templates in isolation by running the "Nuclesu.DeveloperTools.Templates" project.
-3. You can debug the Visual Studio command extensions in isolation by running the "Nucleus.DeveloperTools.VisualStudio.Commands" project.
+1. You can debug the Analyzers and Code Fix providers in isolation by running the "Nucleus.DeveloperTools.Analyzers.Vsix" project.  
+2. To debug Analyzers, in the Visual Studio experimental instance, go to Tools / Options / Text Editor / C# / Advanced, and un-select "Run code analysis in a seperate process".
+3. You can debug the Templates in isolation by running the "Nuclesu.DeveloperTools.Templates" project.
+4. You can debug the Visual Studio command extensions in isolation by running the "Nucleus.DeveloperTools.VisualStudio.Commands" project.
 
-4. Or (most common) you can debug everything by running the "Nuclueus.DeveloperTools.Vsix" project.  This project is also used to create the production install set.
+5. Or (most common) you can debug everything by running the "Nuclueus.DeveloperTools.Vsix" project.  This project is also used to create the production install set.
 
 When debugging Nucleus.DeveloperTools.Vsix, we use a Visual Studio experimental instance with name "Roslyn".  This is controlled by the project item 
 <VSSDKTargetPlatformRegRootSuffix>.  This is required for analyzers and code fix providers to work, because it tells Visual Studio to use the Roslyn 
@@ -21,8 +22,9 @@ compiler.  If you need to reset the Roslyn experimental instance, use the comman
 
 "C:\Program Files\Microsoft Visual Studio\2022\Professional\VSSDK\VisualStudioIntegration\Tools\Bin\CreateExpInstance.exe" /Reset /VSInstance=17.0_8bf49766 /RootSuffix=Roslyn && PAUSE
 
-5. To debug MSBuild tasks, debug Nucleus.DeveloperTools.Vsix as normal (run it from Visual Studio), then when the Visual Studio experimental instance is 
+6. To debug MSBuild tasks, debug Nucleus.DeveloperTools.Vsix as normal (run it from Visual Studio), then when the Visual Studio experimental instance is 
 running, use "Debug -> Attach to Process" to attach to all "MSBUILD" processes.
+
 
 NOTES
 1.  "Nuclueus.DeveloperTools.Vsix" project creates a Vsix (install package) using build outputs from the other projects.  The Vsix build tools generally work OK 

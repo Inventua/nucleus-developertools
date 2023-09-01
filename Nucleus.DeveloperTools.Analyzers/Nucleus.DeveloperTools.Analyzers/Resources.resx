@@ -125,7 +125,7 @@
   </data>
 
   <data name="NUCL301_MESSAGEFORMAT" xml:space="preserve">
-    <value>Controller class '{0}', method '{1}' looks like a controller action which updates data, but neither the '{0}' class or the '{1}' method have an [Authorize] attribute. This may be a security risk because you are not checking user authorization for this action.</value>
+    <value>Controller class '{0}', method '{1}' looks like a controller action which updates data, but neither the '{0}' class or the '{1}' method have an [Authorize] attribute, or another attribute which implements IAuthorizationFilter. This may be a security risk because you are not checking user authorization for this action.</value>
   </data>
   <data name="NUCL301_TITLE" xml:space="preserve">
     <value>Missing [Authorize] attribute in controller class '{0}' method '{1}'.</value>
