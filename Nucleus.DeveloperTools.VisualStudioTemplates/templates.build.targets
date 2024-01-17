@@ -39,18 +39,15 @@
     <Move SourceFiles="Container.zip" DestinationFiles="ItemTemplates\Container.zip" OverwriteReadOnlyFiles="true" />
   </Target>
 
-  <!-- Copy module.build.targets from the main Nucleus.Web project (because that is where it lives) to this folder so that it can -->
-	<!--<Target Name="CopyModuleTargets" BeforeTargets="CoreCompile" Condition="'$(NUCLEUS_PATH)' != ''">
+  <!-- Moved to Nucleus.DeveloperTools.Vsix\vsix.build.targets -->	
+  <!--<Target Name="CopyModuleTargets" BeforeTargets="CoreCompile" Condition="'$(NUCLEUS_PATH)' != ''">
 		<Copy SourceFiles="$(NUCLEUS_PATH)\module.build.targets" DestinationFiles="module.build.targets" OverwriteReadOnlyFiles="true" />
-	</Target>-->
-	
-	<!--<Target Name="CopyToPublish" AfterTargets="CopyVsixManifestFile" Condition="'$(Configuration)' == 'Release' AND '$(NUCLEUS_PUBLISH_PATH)' != '' ">
+	</Target>	
+	<Target Name="CopyToPublish" AfterTargets="CopyVsixManifestFile" Condition="'$(Configuration)' == 'Release' AND '$(NUCLEUS_PUBLISH_PATH)' != '' ">
 		<Copy SourceFiles="$(TargetVsixContainer)" DestinationFolder="$(NUCLEUS_PUBLISH_PATH)Developer Tools\" Retries="2" />
-		<ZipDirectory SourceDirectory="$(NUCLEUS_PUBLISH_PATH)Developer Tools\" DestinationFile="$(ProjectName).zip" Overwrite="true" />
-		
+		<ZipDirectory SourceDirectory="$(NUCLEUS_PUBLISH_PATH)Developer Tools\" DestinationFile="$(ProjectName).zip" Overwrite="true" />		
 		<Delete Files="$(NUCLEUS_PUBLISH_PATH)Developer Tools\$(ProjectName).zip" />
 		<Copy SourceFiles="$(ProjectName).zip" DestinationFolder="$(NUCLEUS_PUBLISH_PATH)Developer Tools" Retries="2" />
-
 	</Target>-->
 	
 </Project>
