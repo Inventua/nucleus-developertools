@@ -54,3 +54,13 @@ Edit vsixmanifest files with the XML editor.
 
 5.  You may intermittently get a file-locking error when compiling.
 Close all Visual studio instances, then open the "Nucleus.DeveloperTools" solution and rebuild.
+
+6.  Warning	NU1701: Package 'Microsoft.CodeAnalysis.Workspaces.MSBuild 4.8.0' was restored using '.NETFramework,Version=v4.6.1 ... .NETFramework,Version=v4.8.1' instead 
+of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.	
+
+This warning should be ignored. 
+
+References:
+https://github.com/dotnet/roslyn/pull/59342
+https://github.com/dotnet/roslyn/pull/59230
+

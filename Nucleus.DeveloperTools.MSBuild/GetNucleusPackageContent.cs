@@ -39,20 +39,17 @@ namespace Nucleus.DeveloperTools.MSBuild
       "Inventua.Nucleus.Data.Sqlite",
       "Inventua.Nucleus.Data.SqlServer"
     };
-    
 
     // project file (csproj) elements
     private const string PROJECT_PACKAGE_REFERENCE_ELEMENT = "PackageReference";
 
-    // error codes help link
-    private const string DEVELOPER_TOOLS_ERROR_REFERENCE_URL = "https://www.nucleus-cms.com/references/dev-tools-error-codes/";
 
     [Required]
     public ITaskItem PackageFile { get; set; }
 
     [Required]
     public ITaskItem ProjectFile { get; set; }
-        
+
     [Output]
     public ITaskItem[] Content
     {
@@ -74,7 +71,6 @@ namespace Nucleus.DeveloperTools.MSBuild
 
       try
       {
-        //XDocument manifest = ReadManifest();
         Manifest manifest = Manifest.FromFile(this.PackageFile.ItemSpec);
 
         if (manifest.IsValidPackage())
@@ -93,7 +89,7 @@ namespace Nucleus.DeveloperTools.MSBuild
           {
             result = false;
           };
-                    
+
           if (!AnalyzeManifestPublisher(manifest))
           {
             result = false;
@@ -112,7 +108,7 @@ namespace Nucleus.DeveloperTools.MSBuild
         else
         {
           // package.xml is not valid
-          LogError(Resources.NUCL001_CODE);
+          this.LogError(Resources.NUCL001_CODE, this.PackageFile.ItemSpec);
           result = false;
         }
       }
@@ -122,7 +118,7 @@ namespace Nucleus.DeveloperTools.MSBuild
         // an otherwise-unhandled error (that is, a bug in this class) should not prevent the build from succeeding, so we do not
         // set result=false here.        
       }
-      
+
       return result;
     }
 
@@ -141,7 +137,7 @@ namespace Nucleus.DeveloperTools.MSBuild
         {
           return XDocument.Load(stream, LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace);
         }
-      }      
+      }
     }
 
     /// <summary>
@@ -155,7 +151,7 @@ namespace Nucleus.DeveloperTools.MSBuild
     private Boolean AnalyzeManifestMinVersion(Manifest manifest)
     {
       Boolean result = true;
-            
+
       XDocument project = ReadProject();
 
       XElement compatibilityElement = manifest.GetCompatibilityElement();
@@ -178,6 +174,7 @@ namespace Nucleus.DeveloperTools.MSBuild
             {
               this.LogError
               (
+                this.PackageFile.ItemSpec,
                 Resources.NUCL200_CODE,
                 minVersionAttribute,
                 referenceName,
@@ -210,12 +207,12 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         if (String.IsNullOrEmpty(packageIdAttribute?.Value))
         {
-          this.LogWarning(Resources.NUCL100_CODE, packageIdAttribute);
+          this.LogError(this.PackageFile.ItemSpec, Resources.NUCL100_CODE, packageIdAttribute);
           result = false;
         }
         else if (!Guid.TryParse(packageIdAttribute.Value, out Guid _))
         {
-          this.LogWarning(Resources.NUCL103_CODE, packageIdAttribute);
+          this.LogError(this.PackageFile.ItemSpec, Resources.NUCL103_CODE, packageIdAttribute);
           result = false;
         }
       }
@@ -241,8 +238,8 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         if (String.IsNullOrWhiteSpace(packageNameElement?.Value))
         {
-          this.LogError(Resources.NUCL101_CODE, packageNameElement);
-          result = false;          
+          this.LogError(this.PackageFile.ItemSpec, Resources.NUCL101_CODE, packageNameElement);
+          result = false;
         }
       }
 
@@ -267,12 +264,12 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         if (String.IsNullOrWhiteSpace(packageVersionElement?.Value))
         {
-          this.LogError(Resources.NUCL102_CODE, packageVersionElement);
+          this.LogError(this.PackageFile.ItemSpec, Resources.NUCL102_CODE, packageVersionElement);
           result = false;
         }
         else if (!Version.TryParse(packageVersionElement.Value, out Version _))
         {
-          this.LogError(Resources.NUCL104_CODE, packageVersionElement);
+          this.LogError(this.PackageFile.ItemSpec, Resources.NUCL104_CODE, packageVersionElement);
           result = false;
         }
       }
@@ -297,26 +294,27 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         if (String.IsNullOrEmpty(publisherNameAttribute?.Value))
         {
-          this.LogWarning(Resources.NUCL210_CODE, publisherNameAttribute);          
+          this.LogWarning(this.PackageFile.ItemSpec, Resources.NUCL210_CODE, publisherNameAttribute);
         }
 
         XAttribute publisherEmailAttribute = publisherElement.Attribute(Manifest.EMAIL_ATTRIBUTE_NAME);
 
         if (String.IsNullOrEmpty(publisherEmailAttribute.Value))
         {
-          this.LogWarning(Resources.NUCL211_CODE, publisherEmailAttribute);
+          this.LogWarning(this.PackageFile.ItemSpec, Resources.NUCL211_CODE, publisherEmailAttribute);
         }
 
         XAttribute publisherUrlAttribute = publisherElement.Attribute(Manifest.URL_ATTRIBUTE_NAME);
-        
+
         if (String.IsNullOrEmpty(publisherUrlAttribute.Value))
         {
-          this.LogWarning(Resources.NUCL212_CODE, publisherUrlAttribute);
+          this.LogWarning(this.PackageFile.ItemSpec, Resources.NUCL212_CODE, publisherUrlAttribute);
         }
       }
       else
       {
-        this.LogError(Resources.NUCL213_CODE, manifest.GetPackageElement());
+        this.LogError(this.PackageFile.ItemSpec, Resources.NUCL213_CODE, manifest.GetPackageElement());
+        result = false;
       }
 
       return result;
@@ -345,7 +343,7 @@ namespace Nucleus.DeveloperTools.MSBuild
 
         if (componentsElement == null)
         {
-          this.LogError(Resources.NUCL105_CODE, packageElement);
+          this.LogError(this.PackageFile.ItemSpec, Resources.NUCL105_CODE, packageElement);
           result = false;
         }
         else
@@ -355,13 +353,13 @@ namespace Nucleus.DeveloperTools.MSBuild
 
           if (!components.Any())
           {
-            this.LogError(Resources.NUCL106_CODE, componentsElement);
+            this.LogError(this.PackageFile.ItemSpec, Resources.NUCL106_CODE, componentsElement);
             result = false;
           }
           else
           {
             // check that files exist
-            CheckFilesExist(manifest);            
+            CheckFilesExist(manifest);
           }
         }
       }
@@ -370,27 +368,38 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     /// <summary>
-    /// Check that the files in <paramref name="parentElement"/> are present, and add them to the result (this.Items) 
-    /// or log an error if they are not present.
+    /// Check that the files in the manifest are present, and add them to the result (this.Items) 
+    /// or log an error if they are not present.  Check that casing of file names in package.xml matches the file system and 
+    /// log a warning if they do not match.
     /// </summary>
     /// <param name="manifest"></param>
     /// <returns></returns>
     private Boolean CheckFilesExist(Manifest manifest)
     {
       Boolean result = true;
-      string projectPath = System.IO.Path.GetDirectoryName(this.ProjectFile.ItemSpec);
+      string projectPath = Environment.CurrentDirectory;// System.IO.Path.GetDirectoryName(this.ProjectFile.ItemSpec);
 
       foreach (ManifestFile file in manifest.Files)
       {
-        string fileName = System.IO.Path.Combine(projectPath, file.FileName);
+        string fileFullPath = System.IO.Path.Combine(projectPath, file.FileName);
+        string projectRelativePath = GetProjectRelativePath(fileFullPath);
 
-        if (System.IO.File.Exists(fileName))
+        if (System.IO.File.Exists(fileFullPath))
         {
-          this.Items.Add(new Microsoft.Build.Utilities.TaskItem() { ItemSpec = fileName });
+          this.Items.Add(new Microsoft.Build.Utilities.TaskItem() { ItemSpec = projectRelativePath });
+
+          string realFullPath = GetRealPathName(fileFullPath);
+          string projectRelativeRealFullPath = GetProjectRelativePath(realFullPath);
+
+          if (projectRelativeRealFullPath != projectRelativePath)
+          {
+            // casing of file name is not an exact match, generate a warning
+            this.LogWarning(this.PackageFile.ItemSpec, Resources.NUCL111_CODE, file.Element, projectRelativePath, projectRelativeRealFullPath);
+          }
         }
         else
         {
-          this.LogError(Resources.NUCL110_CODE, file.Element, fileName);
+          this.LogError(this.PackageFile.ItemSpec, Resources.NUCL110_CODE, file.Element, fileFullPath);
           result = false;
         }
       }
@@ -399,157 +408,46 @@ namespace Nucleus.DeveloperTools.MSBuild
     }
 
     /// <summary>
-    /// Log an error for the specified <paramref name="code"/> with no source code location specified.
+    /// Return a file path which is relative to the current project.
     /// </summary>
-    /// <param name="code"></param>
-    /// <param name="args"></param>
-    private void LogError(string code, params object[] args)
-    {
-      string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT");
-      string category = Resources.ResourceManager.GetString($"{code}_CATEGORY");
-
-      Log.LogError
-      (
-        subcategory: category,
-        code,
-        code,
-        DEVELOPER_TOOLS_ERROR_REFERENCE_URL,
-        this.PackageFile.ItemSpec,
-        0,0,0,0,
-        message,
-        args
-      );
-    }
-
-    /// <summary>
-    /// Log an error for the specified <paramref name="code"/> and <paramref name="element"/>.
-    /// </summary>
-    /// <param name="code"></param>
-    /// <param name="element"></param>
-    /// <param name="args"></param>
-    private void LogError(string code, XElement element, params object[] args)
-    {
-      string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT") ?? "";
-      string category = Resources.ResourceManager.GetString($"{code}_CATEGORY") ?? "";
-
-      Models.SourceCodeLocation location = BuildLocation(element);
-      Log.LogError
-      (
-        subcategory: category,
-        code,
-        code,
-        DEVELOPER_TOOLS_ERROR_REFERENCE_URL,
-        this.PackageFile.ItemSpec,
-        location.StartLineNumber,
-        location.StartColumnNumber,
-        location.EndLineNumber,
-        location.EndColumnNumber,
-        message,
-        args
-      );
-     }
-
-    /// <summary>
-    /// Log an error for the specified <paramref name="code"/> and <paramref name="attribute"/>.
-    /// </summary>
-    /// <param name="code"></param>
-    /// <param name="attribute"></param>
-    /// <param name="args"></param>
-    private void LogError(string code, XAttribute attribute, params object[] args)
-    {
-      string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT") ?? "";
-      string category = Resources.ResourceManager.GetString($"{code}_CATEGORY") ?? "";
-
-      Models.SourceCodeLocation location = BuildLocation(attribute);
-      Log.LogError
-      (
-        subcategory: category,
-        code,
-        code,
-        DEVELOPER_TOOLS_ERROR_REFERENCE_URL,
-        this.PackageFile.ItemSpec,
-        location.StartLineNumber,
-        location.StartColumnNumber,
-        location.EndLineNumber,
-        location.EndColumnNumber,
-        message,
-        args
-      );
-    }
-
-    /// <summary>
-    /// Log a warning for the specified <paramref name="code"/> and <paramref name="attribute"/>.
-    /// </summary>
-    /// <param name="code"></param>
-    /// <param name="attribute"></param>
-    /// <param name="args"></param>
-    private void LogWarning(string code, XAttribute attribute, params object[] args)
-    {
-      string message = Resources.ResourceManager.GetString($"{code}_MESSAGEFORMAT") ?? "";
-      string category = Resources.ResourceManager.GetString($"{code}_CATEGORY") ?? "";
-
-      Models.SourceCodeLocation location = BuildLocation(attribute);
-      Log.LogWarning
-      (
-        subcategory: category,
-        code,
-        code,
-        DEVELOPER_TOOLS_ERROR_REFERENCE_URL,
-        this.PackageFile.ItemSpec,
-        location.StartLineNumber,
-        location.StartColumnNumber,
-        location.EndLineNumber,
-        location.EndColumnNumber,
-        message,
-        args
-      );
-    }
-
-    /// <summary>
-    /// Return a SourceCodeLocation for the specified <paramref name="element"/> value.
-    /// </summary>
-    /// <param name="element"></param>
+    /// <param name="path"></param>
     /// <returns></returns>
-    private Models.SourceCodeLocation BuildLocation(XElement element)
+    private string GetProjectRelativePath(string path)
     {
-      string elementName = element.Name.LocalName;
-      IXmlLineInfo lineInfo = (IXmlLineInfo)element;
-
-      // +1 is for the > character following the element value
-      int startPosition = lineInfo.HasLineInfo() ? lineInfo.LinePosition + elementName.Length + 1 : 0;
-      int endPosition = lineInfo.HasLineInfo() ? startPosition + element.Value.Length : 0;
-
-      return new Models.SourceCodeLocation
+      string projectPath = Environment.CurrentDirectory;
+      if (Environment.CurrentDirectory.Last() != Path.DirectorySeparatorChar)
       {
-        StartLineNumber = lineInfo.LineNumber,
-        StartColumnNumber = startPosition,
-        EndLineNumber = lineInfo.LineNumber,
-        EndColumnNumber = endPosition
-      };
+        projectPath = $"{projectPath}{Path.DirectorySeparatorChar}";
+      }
+      return path.Replace(projectPath, "");
     }
 
     /// <summary>
-    /// Return a SourceCodeLocation for the specified <paramref name="attribute"/> value.
+    /// Return the actual file system path name, with actual path and file name casing.  System.IO.FileInfo simply returns an object 
+    /// with whatever path you supplied, vs returning the actual case-senstive path and filename info.
     /// </summary>
-    /// <param name="attribute"></param>
+    /// <param name="pathName"></param>
     /// <returns></returns>
-    private Models.SourceCodeLocation BuildLocation(XAttribute attribute)
+    /// <remarks>
+    /// From <see href="https://stackoverflow.com/questions/325931/getting-actual-file-name-with-proper-casing-on-windows-with-net"/> 
+    /// </remarks>
+    public static string GetRealPathName(string pathName)
     {
-      string attributeName = attribute.Name.LocalName;
-      IXmlLineInfo lineInfo = (IXmlLineInfo)attribute;
+      if (!(File.Exists(pathName) || Directory.Exists(pathName)))
+        return pathName;
 
-      // +2 is for the equals and quote (=") character before the attribute value, so that the start position is
-      // at the start of the value
-      int startPosition = lineInfo.HasLineInfo() ? lineInfo.LinePosition + attributeName.Length + 2 : 0;
-      int endPosition = lineInfo.HasLineInfo() ? startPosition + attribute.Value.Length : 0;
+      var di = new DirectoryInfo(pathName);
 
-      return new Models.SourceCodeLocation
+      if (di.Parent != null)
       {
-        StartLineNumber = lineInfo.LineNumber,
-        StartColumnNumber = startPosition,
-        EndLineNumber = lineInfo.LineNumber,
-        EndColumnNumber = endPosition
-      };
+        return Path.Combine(
+            GetRealPathName(di.Parent.FullName),
+            di.Parent.GetFileSystemInfos(di.Name)[0].Name);
+      }
+      else
+      {
+        return di.Name.ToUpper();
+      }
     }
   }
 }

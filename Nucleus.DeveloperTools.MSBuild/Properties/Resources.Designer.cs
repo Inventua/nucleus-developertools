@@ -306,6 +306,87 @@ namespace Nucleus.DeveloperTools.MSBuild.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Packaging.
         /// </summary>
+        internal static string NUCL111_CATEGORY {
+            get {
+                return ResourceManager.GetString("NUCL111_CATEGORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NUCL111.
+        /// </summary>
+        internal static string NUCL111_CODE {
+            get {
+                return ResourceManager.GetString("NUCL111_CODE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your manifest (package.xml) file refers to a file &apos;{0}&apos; which does not exactly match the casing of the file system entry &apos;{1}&apos;.  This can cause problems in case-sensitive environments like Linux..
+        /// </summary>
+        internal static string NUCL111_MESSAGEFORMAT {
+            get {
+                return ResourceManager.GetString("NUCL111_MESSAGEFORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Packaging.
+        /// </summary>
+        internal static string NUCL112_CATEGORY {
+            get {
+                return ResourceManager.GetString("NUCL112_CATEGORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NUCL112.
+        /// </summary>
+        internal static string NUCL112_CODE {
+            get {
+                return ResourceManager.GetString("NUCL112_CODE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your project contains a file &apos;{0}&apos; which is marked as content but missing from your manifest (package.xml) file.  Right-click the file in solution explorer to add it to your package, or change its build action to a value which is not &apos;Content&apos;..
+        /// </summary>
+        internal static string NUCL112_MESSAGEFORMAT {
+            get {
+                return ResourceManager.GetString("NUCL112_MESSAGEFORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Packaging.
+        /// </summary>
+        internal static string NUCL113_CATEGORY {
+            get {
+                return ResourceManager.GetString("NUCL113_CATEGORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NUCL113.
+        /// </summary>
+        internal static string NUCL113_CODE {
+            get {
+                return ResourceManager.GetString("NUCL113_CODE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your manifest (package.xml) contains a file &apos;{0}&apos; which is not in your project or is not marked with build action &apos;Content&apos;..
+        /// </summary>
+        internal static string NUCL113_MESSAGEFORMAT {
+            get {
+                return ResourceManager.GetString("NUCL113_MESSAGEFORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Packaging.
+        /// </summary>
         internal static string NUCL200_CATEGORY {
             get {
                 return ResourceManager.GetString("NUCL200_CATEGORY", resourceCulture);

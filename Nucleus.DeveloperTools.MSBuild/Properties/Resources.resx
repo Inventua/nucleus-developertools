@@ -208,6 +208,36 @@
     <value>Packaging</value>
   </data>
 
+  <data name="NUCL111_CODE" xml:space="preserve">
+    <value>NUCL111</value>
+  </data>
+  <data name="NUCL111_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) file refers to a file '{0}' which does not exactly match the casing of the file system entry '{1}'.  This can cause problems in case-sensitive environments like Linux.</value>
+  </data>
+  <data name="NUCL111_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+
+  <data name="NUCL112_CODE" xml:space="preserve">
+    <value>NUCL112</value>
+  </data>
+  <data name="NUCL112_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your project contains a file '{0}' which is marked as content but missing from your manifest (package.xml) file.  Right-click the file in solution explorer to add it to your package, or change its build action to a value which is not 'Content'.</value>
+  </data>
+  <data name="NUCL112_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+
+  <data name="NUCL113_CODE" xml:space="preserve">
+    <value>NUCL113</value>
+  </data>
+  <data name="NUCL113_MESSAGEFORMAT" xml:space="preserve">
+    <value>Your manifest (package.xml) contains a file '{0}' which is not in your project or is not marked with build action 'Content'.</value>
+  </data>
+  <data name="NUCL113_CATEGORY" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+
   <data name="NUCL210_CODE" xml:space="preserve">
     <value>NUCL210</value>
   </data>  

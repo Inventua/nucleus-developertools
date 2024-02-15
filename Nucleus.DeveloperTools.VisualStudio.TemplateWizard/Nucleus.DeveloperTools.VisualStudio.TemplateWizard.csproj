@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Shell.Framework">
-      <Version>17.6.36389</Version>
+      <Version>17.9.37000</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.TemplateWizardInterface">
       <Version>17.5.33428.366</Version>

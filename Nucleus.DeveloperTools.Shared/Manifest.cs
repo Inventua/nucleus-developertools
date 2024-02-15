@@ -207,7 +207,7 @@ namespace Nucleus.DeveloperTools.Shared
       {
         XElement fileElement = new XElement(XName.Get(FILE_ELEMENT_NAME, this.Namespace.NamespaceName));
         fileElement.SetAttributeValue(NAME_ATTRIBUTE_NAME, System.IO.Path.GetFileName(relativeFilePath));
-
+        
         // position the new <file> element before any child <folder> elements
         XElement existingSubFolder = this.GetElement(folder, FOLDER_ELEMENT_NAME);
 
@@ -289,11 +289,11 @@ namespace Nucleus.DeveloperTools.Shared
 
     public override string ToString()
     {
-      StringBuilder builder = new StringBuilder();
-      StringWriter writer = new StringWriter(builder);
-            
-      this.Document.Save(writer, SaveOptions.OmitDuplicateNamespaces);
-      return builder.ToString();
+      // XDocument.ToString does not "pretty print" after using XElement.Add/XElement.AddAfterSelf.  It indents property, but the new item
+      // does not have a line feed after it.  This technique (of parsing the XDocument contents first, before calling ToString) outputs XML
+      // which is formatted as expected.
+      this.Document = XDocument.Parse(this.Document.ToString());
+      return this.Document.ToString(SaveOptions.OmitDuplicateNamespaces);
     }
   }
 }

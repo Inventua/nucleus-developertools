@@ -39,6 +39,9 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
     string projectFolder = GetProjectPath();
+
+    if (String.IsNullOrEmpty(projectFolder)) return;
+
     List<string> selectedFiles = GetSelectedFiles(projectFolder);
 
     if (selectedFiles.Any())
@@ -71,20 +74,8 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
       }
 
       // update package.xml with the changed manifest contents
-      view.Document.TextBuffer.Replace(new Microsoft.VisualStudio.Text.Span(0, view.Document.TextBuffer.CurrentSnapshot.Length), manifest.ToString());
-
-      // use the visual studio "format document" command to auto-format the document, because the manifest class (XDocument) does not 
-      // "pretty format" with tabs and white space.
       await view.WindowFrame.ShowAsync();
-
-      // The delay is needed because WindowFrame.ShowAsync does not execute immediately, and the format document command doesn't work unless
-      // the windows is visible and activated.
-      JoinableTask task = ThreadHelper.JoinableTaskFactory.StartOnIdle(async () =>
-      {
-        await Task.Delay(100);
-        await VS.Commands.ExecuteAsync(VSConstants.VSStd2KCmdID.FORMATDOCUMENT, "-1");
-      });
-
+      view.Document.TextBuffer.Replace(new Microsoft.VisualStudio.Text.Span(0, view.Document.TextBuffer.CurrentSnapshot.Length), manifest.ToString());
     }
   }
 
@@ -101,7 +92,7 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
     ThreadHelper.ThrowIfNotOnUIThread();
 
     EnvDTE80.DTE2 dte = this.DTE;
-    if (dte.SelectedItems.Count > 0)
+    if (dte.SelectedItems.Count > 0 && !String.IsNullOrEmpty(dte.SelectedItems?.Item(1)?.ProjectItem?.ContainingProject?.FullName))
     {
       return System.IO.Path.GetDirectoryName(dte.SelectedItems.Item(1).ProjectItem.ContainingProject.FullName);
     }
@@ -270,6 +261,8 @@ internal sealed class AddToPackageCommand : BaseCommand<AddToPackageCommand>
     ThreadHelper.ThrowIfNotOnUIThread();
 
     string projectFolder = GetProjectPath();
+    if (String.IsNullOrEmpty(projectFolder)) return false;
+
     DocumentView view = ThreadHelper.JoinableTaskFactory.Run(async delegate
     {
       string manifestFilePath = System.IO.Path.Combine(projectFolder, MANIFEST_FILENAME);

@@ -74,7 +74,7 @@ namespace Nucleus.DeveloperTools.Analyzers
     }
 
     /// <summary>
-    // Report a warning message if the specified class does not have an [Extension] attribute, and does not have an [ApiController] or [Route] attribute.
+    /// Report a warning message if the specified class does not have an [Extension] attribute, and does not have an [ApiController] or [Route] attribute.
     /// </summary>
     /// <param name="context"></param>
     /// <param name="classSymbol"></param>
