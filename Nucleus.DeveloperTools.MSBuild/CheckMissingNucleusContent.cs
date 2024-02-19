@@ -22,7 +22,7 @@ namespace Nucleus.DeveloperTools.MSBuild
     public override bool Execute()
     {
       Manifest manifest = Manifest.FromFile(this.PackageFile.ItemSpec);
-      List<ManifestFile> packageContent = manifest.Files;
+      List<ManifestFile> packageContent = manifest.Files(Manifest.ManifestFilesFilters.ContentFiles);
       List<string> projectContent = this.ProjectContent.Select(item => item.ToString()).ToList();
 
       // check for content files which are in the project, but not in the package

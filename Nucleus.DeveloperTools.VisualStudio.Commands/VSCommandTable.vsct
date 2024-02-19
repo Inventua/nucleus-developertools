@@ -11,11 +11,12 @@
       <Group guid="NucleusCommandsPackage" id="NucleusSolutionItemsCommands" priority="0x0200">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
       </Group>
-      <Group guid="NucleusCommandsPackage" id="NucleusSolutionItemsCommands" priority="0x0200">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE" />        
+      <Group guid="NucleusCommandsPackage" id="NucleusProjectCommands" priority="0x0200">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
       </Group>
     </Groups>
-
+   
+    
     <!--This section defines the elements the user can interact with, like a menu command or a button
         or combo box in a toolbar. -->
     <Buttons>
@@ -30,6 +31,20 @@
         <Strings>
           <ButtonText>Add to package.xml</ButtonText>
           <LocCanonicalName>.Nucleus.DeveloperTools.VisualStudio.Commands.AddToPackageCommand</LocCanonicalName>
+        </Strings>
+      </Button>
+
+      <Button guid="NucleusCommandsPackage" id="AddDependenciesToPackageCommand" priority="0x080" type="Button">
+        <Parent guid="NucleusCommandsPackage" id="NucleusProjectCommands" />
+        <Icon guid="guidImages" id="AddDependenciesToPackageCommandIcon" />
+
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DontCache</CommandFlag>
+
+        <Strings>
+          <ButtonText>Add Dependencies to package.xml</ButtonText>
+          <LocCanonicalName>.Nucleus.DeveloperTools.VisualStudio.Commands.AddDependenciesToPackageCommand</LocCanonicalName>
         </Strings>
       </Button>
     </Buttons>
@@ -47,11 +62,15 @@
   <Symbols>
     <GuidSymbol name="NucleusCommandsPackage" value="{82d43a48-23ee-4279-a0c9-ed8fc4d8d7c5}">
       <IDSymbol name="NucleusSolutionItemsCommands" value="0x0001" />
+      <IDSymbol name="NucleusProjectCommands" value="0x0002" />
+      
       <IDSymbol name="AddToPackageCommand" value="0x0100" />
+      <IDSymbol name="AddDependenciesToPackageCommand" value="0x0200" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{8c0d25f5-d649-4939-82c4-2b8cc988195a}" >
       <IDSymbol name="AddToPackageCommandIcon" value="1" />
+      <IDSymbol name="AddDependenciesToPackageCommandIcon" value="2" />
       <!--<IDSymbol name="bmpPic2" value="2" />
       <IDSymbol name="bmpPicSearch" value="3" />
       <IDSymbol name="bmpPicX" value="4" />

@@ -378,8 +378,9 @@ namespace Nucleus.DeveloperTools.MSBuild
     {
       Boolean result = true;
       string projectPath = Environment.CurrentDirectory;// System.IO.Path.GetDirectoryName(this.ProjectFile.ItemSpec);
+      List<ManifestFile> manifestFiles = manifest.Files(Manifest.ManifestFilesFilters.ContentFiles);
 
-      foreach (ManifestFile file in manifest.Files)
+      foreach (ManifestFile file in manifestFiles)
       {
         string fileFullPath = System.IO.Path.Combine(projectPath, file.FileName);
         string projectRelativePath = GetProjectRelativePath(fileFullPath);

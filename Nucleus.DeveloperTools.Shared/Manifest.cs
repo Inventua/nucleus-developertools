@@ -38,6 +38,13 @@ namespace Nucleus.DeveloperTools.Shared
     public const string EMAIL_ATTRIBUTE_NAME = "email";
     public const string URL_ATTRIBUTE_NAME = "url";
 
+    [Flags]
+    public enum ManifestFilesFilters
+    {
+      ContentFiles = 1,
+      Binaries = 2
+    }
+
     private Manifest()
     {
     //  this.FileName = filename;
@@ -141,45 +148,45 @@ namespace Nucleus.DeveloperTools.Shared
     /// Return a list of files in the manifest.
     /// </summary
     /// <returns></returns>
-    public List<ManifestFile> Files
+    public List<ManifestFile> Files(ManifestFilesFilters filter)
     {
-      get
-      { 
-        List<ManifestFile> results = new List<ManifestFile>();
+      List<ManifestFile> results = new List<ManifestFile>();
  
-        foreach (XElement component in this.GetComponentsElements())
-        {
-          results.AddRange(GetFiles(component, ""));
-        } 
+      foreach (XElement component in this.GetComponentsElements())
+      {
+        results.AddRange(GetFiles(component, "", filter));
+      } 
 
-        return results; 
-      }
+      return results; 
     }
-          
+
     /// <summary>
-    /// 
+    /// Return a list of files in the manifest.
     /// </summary>
     /// <param name="parentElement"></param>
     /// <param name="path"></param>
     /// <param name="results"></param>
-    private List<ManifestFile> GetFiles(XElement parentElement, string path)
+    private List<ManifestFile> GetFiles(XElement parentElement, string path, ManifestFilesFilters filter)
     {
       List<ManifestFile> results = new List<ManifestFile>();
 
-      foreach (XElement fileElement in parentElement.Elements(this.Namespace + FILE_ELEMENT_NAME))
-      {
-        string fileName = System.IO.Path.Combine(path, fileElement.Attribute(NAME_ATTRIBUTE_NAME).Value);
+      string pathStart = path.Split(new char[] { '/', '\\' }).FirstOrDefault();
+      Boolean isBinFolder = pathStart?.Equals("bin", StringComparison.OrdinalIgnoreCase) == true;
 
-        results.Add(new ManifestFile(fileName, fileElement));
+      if ((!isBinFolder && filter.HasFlag(ManifestFilesFilters.ContentFiles)) || (isBinFolder && filter.HasFlag(ManifestFilesFilters.Binaries)))
+      {
+        foreach (XElement fileElement in parentElement.Elements(this.Namespace + FILE_ELEMENT_NAME))
+        {
+          string fileName = System.IO.Path.Combine(path, fileElement.Attribute(NAME_ATTRIBUTE_NAME).Value);
+
+          results.Add(new ManifestFile(fileName, fileElement));
+        }
       }
 
       foreach (XElement folderElement in parentElement.Elements(this.Namespace + FOLDER_ELEMENT_NAME))
       {
         string subFolderName = folderElement.Attribute(NAME_ATTRIBUTE_NAME)?.Value;
-        if (!subFolderName.Equals("bin", StringComparison.OrdinalIgnoreCase))
-        {
-          results.AddRange(GetFiles(folderElement, System.IO.Path.Combine(path, subFolderName)));
-        }
+        results.AddRange(GetFiles(folderElement, System.IO.Path.Combine(path, subFolderName), filter));
       }
 
       return results;

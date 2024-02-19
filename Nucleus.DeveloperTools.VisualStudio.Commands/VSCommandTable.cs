@@ -24,7 +24,10 @@ namespace Nucleus.DeveloperTools.VisualStudio.Commands
     internal sealed partial class PackageIds
     {
         public const int NucleusSolutionItemsCommands = 0x0001;
+        public const int NucleusProjectCommands = 0x0002;
         public const int AddToPackageCommand = 0x0100;
+        public const int AddDependenciesToPackageCommand = 0x0200;
         public const int AddToPackageCommandIcon = 0x0001;
+        public const int AddDependenciesToPackageCommandIcon = 0x0002;
     }
 }
