@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Nucleus.DeveloperTools.MSBuild
 {
-  internal static class BuiltTaskExtensions
+  internal static class BuildTaskExtensions
   {
     // error codes help link
     private const string DEVELOPER_TOOLS_ERROR_REFERENCE_URL = "https://www.nucleus-cms.com/references/dev-tools-error-codes/";

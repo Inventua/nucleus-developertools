@@ -349,7 +349,7 @@ namespace Nucleus.DeveloperTools.MSBuild.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your project contains a file &apos;{0}&apos; which is marked as content but missing from your manifest (package.xml) file.  Right-click the file in solution explorer to add it to your package, or change its build action to a value which is not &apos;Content&apos;..
+        ///   Looks up a localized string similar to Your project contains a file &apos;{0}&apos; which is marked as content but is missing from your manifest (package.xml) file.  Right-click the file in solution explorer to add it to your package, or change its build action to a value which is not &apos;Content&apos;..
         /// </summary>
         internal static string NUCL112_MESSAGEFORMAT {
             get {
@@ -376,7 +376,7 @@ namespace Nucleus.DeveloperTools.MSBuild.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) contains a file &apos;{0}&apos; which is not in your project or is not marked with build action &apos;Content&apos;..
+        ///   Looks up a localized string similar to Your manifest (package.xml) contains a file named &apos;{0}&apos; which is not in your project or is not marked with build action &apos;Content&apos;..
         /// </summary>
         internal static string NUCL113_MESSAGEFORMAT {
             get {

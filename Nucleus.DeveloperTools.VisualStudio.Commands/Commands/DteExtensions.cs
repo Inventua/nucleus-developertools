@@ -31,23 +31,8 @@ internal static class DteExtensions
 
     EnvDTE.Project project = GetSelectedProject(dte);
     if (project == null) return "";
+
     return System.IO.Path.GetDirectoryName(project.FullName);
-
-    // project item(s) are selected
-    //if (dte.SelectedItems.Count > 0 && !String.IsNullOrEmpty(dte.SelectedItems?.Item(1)?.ProjectItem?.ContainingProject?.FullName))
-    //{
-    //  return System.IO.Path.GetDirectoryName(dte.SelectedItems.Item(1).ProjectItem.ContainingProject.FullName);
-    //}
-
-    // todo: https://github.com/VsixCommunity/Community.VisualStudio.Toolkit/blob/master/demo/VSSDK.TestExtension/Commands/EditSelectedItemLabelCommand.cs
-
-
-    //if (dte.SelectedItems.Count > 0 && !String.IsNullOrEmpty(dte.SelectedItems?.Item(1).Project?.FullName))
-    //{
-    //  return System.IO.Path.GetDirectoryName(dte.SelectedItems.Item(1).Project.FullName);
-    //}
-
-    //return "";
   }
 
   /// <summary>
@@ -82,6 +67,12 @@ internal static class DteExtensions
     }
   }
 
+  /// <summary>
+  /// Update the manifest (package.xml) file for the selected project using the supplied <paramref name="manifest"/>.
+  /// </summary>
+  /// <param name="dte"></param>
+  /// <param name="manifest"></param>
+  /// <returns></returns>
   public static async Task UpdateManifest(this EnvDTE80.DTE2 dte, Manifest manifest)
   {
     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -94,6 +85,11 @@ internal static class DteExtensions
     view.Document.TextBuffer.Replace(new Microsoft.VisualStudio.Text.Span(0, view.Document.TextBuffer.CurrentSnapshot.Length), manifest.ToString());
   }
 
+  /// <summary>
+  /// Returns whether a project node is selected in solution explorer.
+  /// </summary>
+  /// <param name="dte"></param>
+  /// <returns></returns>
   public static Boolean IsProjectNodeSelected(this DTE2 dte)
   {
     ThreadHelper.ThrowIfNotOnUIThread();
@@ -101,13 +97,26 @@ internal static class DteExtensions
     return (dte.SelectedItems.Count == 1 && dte.SelectedItems.Item(1).ProjectItem.Kind == "project");
   }
 
+  /// <summary>
+  /// Returns the selected project, or the project which contains the selected item.
+  /// </summary>
+  /// <param name="dte"></param>
+  /// <returns></returns>
   public static EnvDTE.Project GetSelectedProject(this DTE2 dte)
   {
     ThreadHelper.ThrowIfNotOnUIThread();
 
-    return dte.SelectedItems?.Item(1)?.Project;
+    EnvDTE.SelectedItem item = dte.SelectedItems?.Item(1);
+
+    return item?.Project ?? ((EnvDTE.ProjectItem)item.ProjectItem)?.ContainingProject;
   }
 
+  /// <summary>
+  /// Return a list of full paths of the items which are selected in solution explorer.
+  /// </summary>
+  /// <param name="dte"></param>
+  /// <param name="projectPath"></param>
+  /// <returns></returns>
   public static List<string> GetSelectedFiles(this DTE2 dte, string projectPath)
   {
     ThreadHelper.ThrowIfNotOnUIThread();
@@ -145,9 +154,10 @@ internal static class DteExtensions
   {
     ThreadHelper.ThrowIfNotOnUIThread();
 
-    if (dte.SelectedItems.Count > 0 && !String.IsNullOrEmpty(dte.SelectedItems?.Item(1).Project?.FullName))
+    EnvDTE.Project project = dte.GetSelectedProject();
+      
+    if (project != null)
     {
-      EnvDTE.Project project = dte.SelectedItems?.Item(1).Project;
       foreach (EnvDTE.ProjectItem item in project.ProjectItems)
       {
         if (item.Name.Equals(MANIFEST_FILENAME, StringComparison.OrdinalIgnoreCase))
@@ -160,6 +170,14 @@ internal static class DteExtensions
     return false;
   }
 
+  /// <summary>
+  /// Return a list containing the relative path of the selected file, if a file is selected in solution explorer, or a list of the relative
+  /// paths of all files in the selected folder, if a folder is selected in solution explorer.
+  /// </summary>
+  /// <param name="dte"></param>
+  /// <param name="folderItem"></param>
+  /// <param name="projectPath"></param>
+  /// <returns></returns>
   public static List<string> GetFolderFiles(this EnvDTE80.DTE2 dte, ProjectItem folderItem, string projectPath)
   {
     ThreadHelper.ThrowIfNotOnUIThread();
@@ -181,6 +199,12 @@ internal static class DteExtensions
     return results;
   }
 
+  /// <summary>
+  /// Return the path of the specified <paramref name="projectItem"/>, relative to the project root folder.
+  /// </summary>
+  /// <param name="projectItem"></param>
+  /// <param name="projectPath"></param>
+  /// <returns></returns>
   private static string GetRelativePath(ProjectItem projectItem, string projectPath)
   {
     ThreadHelper.ThrowIfNotOnUIThread();

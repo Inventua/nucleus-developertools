@@ -106,6 +106,8 @@ internal sealed class AddDependenciesToPackage : BaseCommand<AddDependenciesToPa
   /// <param name="e"></param>
   private Boolean CanExecute()
   {
+    ThreadHelper.ThrowIfNotOnUIThread();
+
     try
     {
       return this.DTE.IsNucleusProject();

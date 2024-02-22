@@ -34,7 +34,7 @@
         </Strings>
       </Button>
 
-      <Button guid="NucleusCommandsPackage" id="AddDependenciesToPackageCommand" priority="0x080" type="Button">
+      <Button guid="NucleusCommandsPackage" id="AddDependenciesToPackageCommand" priority="0x100" type="Button">
         <Parent guid="NucleusCommandsPackage" id="NucleusProjectCommands" />
         <Icon guid="guidImages" id="AddDependenciesToPackageCommandIcon" />
 
@@ -56,6 +56,7 @@
           inside a button definition. An important aspect of this declaration is that the element id
           must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
       <Bitmap guid="guidImages" href="Resources\Icons.png" usedList="AddToPackageCommandIcon"/>
+      <Bitmap guid="guidImages" href="Resources\Icons.png" usedList="AddDependenciesToPackageCommandIcon"/>
     </Bitmaps>
   </Commands>
 
@@ -71,11 +72,6 @@
     <GuidSymbol name="guidImages" value="{8c0d25f5-d649-4939-82c4-2b8cc988195a}" >
       <IDSymbol name="AddToPackageCommandIcon" value="1" />
       <IDSymbol name="AddDependenciesToPackageCommandIcon" value="2" />
-      <!--<IDSymbol name="bmpPic2" value="2" />
-      <IDSymbol name="bmpPicSearch" value="3" />
-      <IDSymbol name="bmpPicX" value="4" />
-      <IDSymbol name="bmpPicArrows" value="5" />
-      <IDSymbol name="bmpPicStrikethrough" value="6" />-->
     </GuidSymbol>
   </Symbols>
 </CommandTable>

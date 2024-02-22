@@ -222,7 +222,7 @@
     <value>NUCL112</value>
   </data>
   <data name="NUCL112_MESSAGEFORMAT" xml:space="preserve">
-    <value>Your project contains a file '{0}' which is marked as content but missing from your manifest (package.xml) file.  Right-click the file in solution explorer to add it to your package, or change its build action to a value which is not 'Content'.</value>
+    <value>Your project contains a file '{0}' which is marked as content but is missing from your manifest (package.xml) file.  Right-click the file in solution explorer to add it to your package, or change its build action to a value which is not 'Content'.</value>
   </data>
   <data name="NUCL112_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
@@ -232,7 +232,7 @@
     <value>NUCL113</value>
   </data>
   <data name="NUCL113_MESSAGEFORMAT" xml:space="preserve">
-    <value>Your manifest (package.xml) contains a file '{0}' which is not in your project or is not marked with build action 'Content'.</value>
+    <value>Your manifest (package.xml) contains a file named '{0}' which is not in your project or is not marked with build action 'Content'.</value>
   </data>
   <data name="NUCL113_CATEGORY" xml:space="preserve">
     <value>Packaging</value>
