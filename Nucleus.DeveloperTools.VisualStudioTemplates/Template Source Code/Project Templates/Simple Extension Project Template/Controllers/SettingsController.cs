@@ -38,7 +38,7 @@ namespace $nucleus.extension.namespace$.Controllers
 		{
       viewModel.SetSettings(this.Context.Module);
 
-      await this.PageModuleManager.SaveSettings(this.Context.Module);
+      await this.PageModuleManager.SaveSettings(this.Context.Page, this.Context.Module);
 
 			return View("Settings", BuildSettingsViewModel(viewModel));
 		}
