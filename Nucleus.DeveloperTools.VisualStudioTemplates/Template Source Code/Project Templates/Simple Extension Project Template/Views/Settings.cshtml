@@ -5,7 +5,7 @@
 @using Nucleus.Abstractions.Models
 @Html.AddStyle("~!/../settings.css")
 <div class="nucleus-editor-panel">
-  @using (Html.BeginNucleusForm("Settings", "$nucleus.extension.name$Admin", "$nucleus.extension.name$Settings", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+  @using (Html.BeginNucleusForm("SaveSettings", "$nucleus.extension.name$Admin", "$nucleus.extension.name$Settings", FormMethod.Post, new { @enctype = "multipart/form-data" }))
 	{
 		<fieldset role="group" aria-labelledby="heading">
 			<h2 class="nucleus-control-panel-heading">Settings</h2>
@@ -20,7 +20,7 @@
 		</fieldset>
 
 		<div class="nucleus-form-buttonrow">
-      @Html.SubmitButton("", "Save Settings", @Url.NucleusAction("Settings", "$nucleus.extension.name$Settings", "$nucleus.extension.name$"), new { })
+      @Html.SubmitButton("", "Save Settings", @Url.NucleusAction("SaveSettings", "$nucleus.extension.name$Settings", "$nucleus.extension.name$"), new { })
 		</div>
 	}
 </div>

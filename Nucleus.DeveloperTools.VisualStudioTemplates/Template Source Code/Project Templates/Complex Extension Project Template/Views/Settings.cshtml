@@ -1,7 +1,7 @@
 ﻿@model $nucleus.extension.namespace$.ViewModels.Settings
 @Html.AddStyle("~!/../settings.css")
 <div class="nucleus-editor-panel">
-	@using (Html.BeginNucleusForm("Settings", "$nucleus.extension.name$Settings", "$nucleus.extension.name$", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+	@using (Html.BeginNucleusForm("SaveSettings", "$nucleus.extension.name$Settings", "$nucleus.extension.name$", FormMethod.Post, new { @enctype = "multipart/form-data" }))
 	{
 		<fieldset role="group" aria-labelledby="heading">
 			<h2 class="nucleus-control-panel-heading">Settings</h2>
