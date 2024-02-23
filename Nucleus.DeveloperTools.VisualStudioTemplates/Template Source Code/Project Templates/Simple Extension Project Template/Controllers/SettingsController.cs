@@ -40,7 +40,7 @@ namespace $nucleus.extension.namespace$.Controllers
 
       await this.PageModuleManager.SaveSettings(this.Context.Page, this.Context.Module);
 
-			return View("Settings", BuildSettingsViewModel(viewModel));
+			return Ok();
 		}
 
 		private ViewModels.Settings BuildSettingsViewModel(ViewModels.Settings viewModel)
