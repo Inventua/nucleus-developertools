@@ -19,11 +19,15 @@ namespace Nucleus.DeveloperTools.MSBuild
     [Required]
     public ITaskItem[] ProjectContent { get; set; }
 
+    [Required]
+    public ITaskItem[] ProjectEmbedded { get; set; }
+
     public override bool Execute()
     {
       Manifest manifest = Manifest.FromFile(this.PackageFile.ItemSpec);
-      List<ManifestFile> packageContent = manifest.Files(Manifest.ManifestFilesFilters.ContentFiles);
+      List<ManifestFile> packageContent = manifest.Files(Manifest.ManifestFilesFilters.ContentFiles | Manifest.ManifestFilesFilters.EmbeddedFiles);
       List<string> projectContent = this.ProjectContent.Select(item => item.ToString()).ToList();
+      List<string> projectEmbedded = this.ProjectEmbedded.Select(item => item.ToString()).ToList();
 
       // check for content files which are in the project, but not in the package
       foreach (string missingItem in projectContent.Where(item => !packageContent.Where(packageItem => packageItem.FileName.Equals(item, StringComparison.OrdinalIgnoreCase)).Any()))
@@ -37,7 +41,11 @@ namespace Nucleus.DeveloperTools.MSBuild
       // check for files which are in the package, but are not in the project/not marked as content
       foreach (ManifestFile missingItem in packageContent.Where(item => !projectContent.Contains(item.FileName, StringComparer.OrdinalIgnoreCase)))
       {
-        this.LogWarning(this.PackageFile.ItemSpec, Resources.NUCL113_CODE, missingItem.Element, missingItem.FileName);
+        // check that the file is also missing from the list of embedded files
+        if (!projectEmbedded.Any(embeddedItem => embeddedItem.Equals(missingItem.FileName, StringComparison.OrdinalIgnoreCase)))
+        {
+          this.LogWarning(this.PackageFile.ItemSpec, Resources.NUCL113_CODE, missingItem.Element, missingItem.FileName);
+        }
       }
 
       return true;

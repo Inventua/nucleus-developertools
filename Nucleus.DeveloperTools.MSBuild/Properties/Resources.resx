@@ -232,7 +232,7 @@
     <value>NUCL113</value>
   </data>
   <data name="NUCL113_MESSAGEFORMAT" xml:space="preserve">
-    <value>Your manifest (package.xml) contains a file named '{0}' which is not in your project or is not marked with build action 'Content'.</value>
+    <value>Your manifest (package.xml) contains a file named '{0}' which is not in your project or is not marked with build action 'Content' or 'Embedded Resource'.</value>
   </data>
   <data name="NUCL113_CATEGORY" xml:space="preserve">
     <value>Packaging</value>

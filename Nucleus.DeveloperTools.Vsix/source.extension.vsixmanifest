@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Nucleus.DeveloperTools.69c392ae-8843-488a-ab8b-ee7937873dcc" Version="1.4.0.0" Language="en-US" Publisher="Nucleus" />
+    <Identity Id="Nucleus.DeveloperTools.69c392ae-8843-488a-ab8b-ee7937873dcc" Version="1.4.0.2" Language="en-US" Publisher="Nucleus" />
     <DisplayName>Nucleus Developer Tools for Visual Studio</DisplayName>
     <Description>
       Nucleus Developer Tools.  Visual Studio Templates, Visual Studio Extensions, MSBuild tasks, Analyzers, Code fix providers for Nucleus extension developers.
@@ -35,21 +35,16 @@
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Simple Extension.zip" />
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Empty Extension.zip" />
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Layout Extension.zip" />
-
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\View.zip" />
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Controller.zip" />
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Layout.zip" />
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Container.zip" />
-
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Shared" Path="|Nucleus.DeveloperTools.Shared|" AssemblyName="|Nucleus.DeveloperTools.Shared;AssemblyName|" />
-    
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|"/>
-    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|"/>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|"/>
-    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|"/>
-
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|" />
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers" Path="|Nucleus.DeveloperTools.Analyzers|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|" />
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.Analyzers.CodeFixes" Path="|Nucleus.DeveloperTools.Analyzers.CodeFixes|" />
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.VisualStudio.Commands" Path="|Nucleus.DeveloperTools.VisualStudio.Commands;PkgdefProjectOutputGroup|" />
-
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.VisualStudio.TemplateWizard" Path="|Nucleus.DeveloperTools.VisualStudio.TemplateWizard|" AssemblyName="|Nucleus.DeveloperTools.VisualStudio.TemplateWizard;AssemblyName|" />
     <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Nucleus.DeveloperTools.MSBuild" Path="|Nucleus.DeveloperTools.MSBuild|" AssemblyName="|Nucleus.DeveloperTools.MSBuild;AssemblyName|" />
   </Assets>

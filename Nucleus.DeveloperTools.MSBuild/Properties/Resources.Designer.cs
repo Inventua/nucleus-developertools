@@ -376,7 +376,7 @@ namespace Nucleus.DeveloperTools.MSBuild.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your manifest (package.xml) contains a file named &apos;{0}&apos; which is not in your project or is not marked with build action &apos;Content&apos;..
+        ///   Looks up a localized string similar to Your manifest (package.xml) contains a file named &apos;{0}&apos; which is not in your project or is not marked with build action &apos;Content&apos; or &apos;Embedded Resource&apos;..
         /// </summary>
         internal static string NUCL113_MESSAGEFORMAT {
             get {

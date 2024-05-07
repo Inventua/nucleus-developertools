@@ -10,6 +10,22 @@
 		<Message Text="Nucleus Publish Path: $(NUCLEUS_PUBLISH_PATH)" Importance="high" />
 	</Target>
 
+  <!-- Set the version in source.extension.vsixmanifest to the msbuild Version property -->
+  <!-- this is from https://gist.github.com/cezarypiatek/42553a6364fb2ccc8a81dcea570fdde1 -->
+  <Target Name="SetVersionForVsixManifest" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <Namespace>
+        <Namespace Prefix="d" Uri="http://schemas.microsoft.com/developer/vsx-schema/2011" />
+      </Namespace>
+    </PropertyGroup >
+    <XmlPoke
+      XmlInputPath="source.extension.vsixmanifest"
+      Value="$(Version)"
+      Query="/d:PackageManifest/d:Metadata/d:Identity/@Version"
+      Namespaces="$(Namespace)"
+      />
+  </Target>
+  
   <!-- ZIP & copy the project and item templates from "/Template Source Code" to the "ProjectTemplates" and "ItemTemplates -->
   <!-- folders (because that is where the VSIX build process wants them to be) -->
 	<Target Name="ZipOutputPath" BeforeTargets="CoreCompile">

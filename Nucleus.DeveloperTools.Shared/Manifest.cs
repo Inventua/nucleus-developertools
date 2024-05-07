@@ -42,7 +42,8 @@ namespace Nucleus.DeveloperTools.Shared
     public enum ManifestFilesFilters
     {
       ContentFiles = 1,
-      Binaries = 2
+      EmbeddedFiles = 2,
+      Binaries = 4
     }
 
     private Manifest()
@@ -173,7 +174,7 @@ namespace Nucleus.DeveloperTools.Shared
       string pathStart = path.Split(new char[] { '/', '\\' }).FirstOrDefault();
       Boolean isBinFolder = pathStart?.Equals("bin", StringComparison.OrdinalIgnoreCase) == true;
 
-      if ((!isBinFolder && filter.HasFlag(ManifestFilesFilters.ContentFiles)) || (isBinFolder && filter.HasFlag(ManifestFilesFilters.Binaries)))
+      if ((!isBinFolder && filter.HasFlag(ManifestFilesFilters.ContentFiles)) || (!isBinFolder && filter.HasFlag(ManifestFilesFilters.EmbeddedFiles)) || (isBinFolder && filter.HasFlag(ManifestFilesFilters.Binaries)))
       {
         foreach (XElement fileElement in parentElement.Elements(this.Namespace + FILE_ELEMENT_NAME))
         {
