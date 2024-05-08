@@ -8,8 +8,12 @@
     The production VSIX is created by the "Nucleus.DeveloperTools.Vsix" project, which includes all of the Nucleus developer tools.
   -->
   <PropertyGroup>
+    <!-- 
+    Any time that this version gets updated, all of the project and item templates must also update the version in 
+    the WizardExtension/Assembly section of Project.vstemplate
+    -->
     <VersionPrefix>1.2.2.0</VersionPrefix>
-    <!--<VersionSuffix>a3</VersionSuffix>-->
+        
     <Authors>Inventua Pty Ltd</Authors>
     <Product>Nucleus</Product>
     <AssemblyTitle>Nucleus Visual Studio Templates</AssemblyTitle>

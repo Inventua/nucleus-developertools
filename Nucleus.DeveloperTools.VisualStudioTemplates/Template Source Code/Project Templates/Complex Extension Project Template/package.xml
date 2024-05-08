@@ -6,7 +6,7 @@
 	<description>
 		$nucleus.extension.description$
 	</description>
-	<compatibility minVersion="1.0.1.0" maxVersion="*" />
+	<compatibility minVersion="1.3.0.0" maxVersion="*" />
 	
 	<components>
 		<component folderName="$nucleus.extension.name$" optional="false">
