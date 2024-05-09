@@ -22,6 +22,9 @@ namespace Nucleus.DeveloperTools.MSBuild
     [Required]
     public ITaskItem[] ProjectEmbedded { get; set; }
 
+    // these are file types which do not need to be included in package.xml but may be set as "content"
+    private static string[] CONTENT_EXCLUDED_FILETYPES = { ".razor" };
+
     public override bool Execute()
     {
       Manifest manifest = Manifest.FromFile(this.PackageFile.ItemSpec);
@@ -30,7 +33,10 @@ namespace Nucleus.DeveloperTools.MSBuild
       List<string> projectEmbedded = this.ProjectEmbedded.Select(item => item.ToString()).ToList();
 
       // check for content files which are in the project, but not in the package
-      foreach (string missingItem in projectContent.Where(item => !packageContent.Where(packageItem => packageItem.FileName.Equals(item, StringComparison.OrdinalIgnoreCase)).Any()))
+      foreach (string missingItem in projectContent
+        .Where(item => !CONTENT_EXCLUDED_FILETYPES.Contains(System.IO.Path.GetExtension(item)))
+        .Where(item => !packageContent.Where(packageItem => packageItem.FileName.Equals(item, StringComparison.OrdinalIgnoreCase))
+        .Any()))
       {
         if (!missingItem.Equals(this.PackageFile.ItemSpec, StringComparison.OrdinalIgnoreCase))
         {
