@@ -25,7 +25,7 @@ namespace Nucleus.DeveloperTools.Analyzers
   [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
   public class ControllerAnalyzer : DiagnosticAnalyzer
   {
-    private static readonly string[] ADMIN_METHODS = { "Save", "Delete", "Remove" };
+    private static readonly string[] ADMIN_METHODS = { "Save", "Delete", "Remove", "Update", "Store" };
 
     public static readonly ImmutableArray<DiagnosticDescriptor> MESSAGES = ImmutableArray.Create
     (
@@ -120,22 +120,25 @@ namespace Nucleus.DeveloperTools.Analyzers
     /// <param name="methodNamePart"></param>
     private static void CheckMethodAuthentication(SymbolAnalysisContext context, INamedTypeSymbol classSymbol)
     {
-      // if the class does not have any attribute which is derived from IAuthorizationFilter
-      if (!classSymbol.GetAttributes()
-        .Where(attribute => Implements(attribute.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Filters.IAuthorizationFilter"))).Any())
+      // if the class does not have any attribute which implements IAuthorizeData
+      if (!classSymbol.GetAttributes().Any(attribute => 
+        Implements(attribute.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Authorization.IAuthorizeData")) ||
+        Implements(attribute.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Authorization.IAllowAnonymous")) 
+        ))
       {
         // Check if a method exists which matches any of the "well known" method name parts and is public
         foreach (ISymbol methodSymbol in classSymbol.GetMembers()
-        .Where(member => member.DeclaredAccessibility.HasFlag(Accessibility.Public) && ContainsAny(member.Name, ADMIN_METHODS)))
+          .Where(member => member.DeclaredAccessibility.HasFlag(Accessibility.Public) && ContainsAny(member.Name, ADMIN_METHODS)))
         {
           // Check if the method has an attribute derived from HttpMethodAttribute (like [HttpPost])
           if (methodSymbol.GetAttributes()
-              .Where(attribute => InheritsOrIsType(attribute.AttributeClass.BaseType, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Routing.HttpMethodAttribute")))
-              .Any())
+              .Any(attribute => InheritsOrIsType(attribute.AttributeClass.BaseType, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Routing.HttpMethodAttribute"))))
           {
-            // Check if the method does not have an attribute which is derived from IAuthorizationFilter
-            if (!methodSymbol.GetAttributes()
-              .Where(attribute => Implements(attribute.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Filters.IAuthorizationFilter"))).Any())
+            // Check if the method does not have an attribute which implements IAuthorizeData
+            if (!methodSymbol.GetAttributes().Any(attribute => 
+              Implements(attribute.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Authorization.IAuthorizeData")) ||
+              Implements(attribute.AttributeClass, context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Authorization.IAllowAnonymous"))
+              ))
             {
               context.ReportDiagnostic
               (
