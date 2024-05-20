@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,14 +11,17 @@ public class ProjectReference
 {
   public Boolean IsSelected { get; set; }
 
-  public string Name { get; }
+  public string FileName { get; }
+  public string ReferenceName { get; }
+
   public string Description { get; }
   public string Version { get; }
   public string Path { get; }
 
-  public ProjectReference(VSLangProj.Reference reference)
+  public ProjectReference(VSLangProj.Reference reference, string filename)
   {
-    this.Name = reference.Name;
+    this.FileName = filename;
+    this.ReferenceName = reference.Name;
     this.Version = reference.Version; 
     this.Path = reference.Path;
     this.Description = reference.Description;
@@ -25,5 +29,5 @@ public class ProjectReference
     this.IsSelected = true;
   }
 
-  public string AssemblyFileName { get => this.Name + ".dll"; }
+  //public string AssemblyFileName { get => this.Name + ".dll"; }
 }

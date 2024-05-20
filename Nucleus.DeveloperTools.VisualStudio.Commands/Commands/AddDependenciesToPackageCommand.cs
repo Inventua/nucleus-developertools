@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio.Threading;
 using System.Diagnostics;
 using VSLangProj;
+using System.IO.Packaging;
 
 namespace Nucleus.DeveloperTools.VisualStudio.Commands;
 
@@ -55,14 +56,15 @@ internal sealed class AddDependenciesToPackage : BaseCommand<AddDependenciesToPa
       List<ManifestFile> manifestFiles = manifest.Files(Manifest.ManifestFilesFilters.Binaries);
 
       // get a list of references which are already in the manifest
-      IEnumerable<VSLangProj.Reference> existingReferences = references
-        .Where(reference => manifestFiles.Any(manifestFile => System.IO.Path.GetFileName(manifestFile.FileName).Equals(reference.AssemblyFileName(), StringComparison.OrdinalIgnoreCase)));
+      IEnumerable<Models.ProjectReference> existingReferences = references
+        .SelectMany(reference => GetAssemblyFiles(GetProjectOutputPath(project), reference))
+        .Where(reference => manifestFiles.Any(manifestFile => System.IO.Path.GetFileName(manifestFile.FileName).Equals(reference.FileName, StringComparison.OrdinalIgnoreCase)));
 
-      // get a list of references which are not in the manifest
+      // get a list of reference files which are not in the manifest
       IEnumerable<Models.ProjectReference> newReferences = references
-        .Where(reference => !manifestFiles.Any(manifestFile => System.IO.Path.GetFileName(manifestFile.FileName).Equals(reference.AssemblyFileName(), StringComparison.OrdinalIgnoreCase)))
-        .Select(reference => new Models.ProjectReference(reference));
-
+        .SelectMany(reference => GetAssemblyFiles(GetProjectOutputPath(project), reference))
+        .Where(reference => !manifestFiles.Any(manifestFile => System.IO.Path.GetFileName(manifestFile.FileName).Equals(reference.FileName, StringComparison.OrdinalIgnoreCase)));
+        
       // display the references selection dialog
       Views.AddReferencesToPackage view = new();
       ViewModels.AddReferencesToPackage viewModel = new() { NewReferences = newReferences, ExistingReferences = existingReferences };
@@ -75,9 +77,9 @@ internal sealed class AddDependenciesToPackage : BaseCommand<AddDependenciesToPa
         // Add selected references to the manifest
         foreach (Models.ProjectReference referenceToAdd in viewModel.NewReferences.Where(newReference => newReference.IsSelected))
         {
-          if (!manifestFiles.Where(file => file.FileName.Equals(referenceToAdd.AssemblyFileName)).Any())
+          if (!manifestFiles.Where(file => file.FileName.Equals(referenceToAdd.FileName)).Any())
           {
-            System.Xml.Linq.XElement addedElement = manifest.AddFile("bin\\" + referenceToAdd.AssemblyFileName);
+            System.Xml.Linq.XElement addedElement = manifest.AddFile("bin\\" + referenceToAdd.FileName);
           }
         }
 
@@ -85,6 +87,40 @@ internal sealed class AddDependenciesToPackage : BaseCommand<AddDependenciesToPa
         await this.DTE.UpdateManifest(manifest);
       }
     }
+  }
+
+  string GetProjectOutputPath(VSLangProj.VSProject project)
+  {
+    ThreadHelper.ThrowIfNotOnUIThread();
+
+    string targetFramework = this.DTE.GetSelectedProject().Properties.Item("FriendlyTargetFramework")?.Value?.ToString();
+    string activeConfiguration = this.DTE.GetSelectedProject().ConfigurationManager.ActiveConfiguration.ConfigurationName;
+
+    string path = System.IO.Path.GetDirectoryName(project.Project.FullName) + "\\bin\\" + activeConfiguration + "\\" + targetFramework;
+
+    return path;
+  }
+
+  List<Models.ProjectReference> GetAssemblyFiles(string projectOutputPath, VSLangProj.Reference reference)
+  {
+    List<Models.ProjectReference> assemblyFiles = [ new (reference, System.IO.Path.GetFileName(reference.AssemblyFileName())) ];
+
+    string[] filenames = 
+    [
+      System.IO.Path.GetFileNameWithoutExtension(reference.AssemblyFileName()) + ".wasm", 
+      System.IO.Path.GetFileNameWithoutExtension(reference.AssemblyFileName()) + ".wasm.gz",
+      System.IO.Path.GetFileNameWithoutExtension(reference.AssemblyFileName()) + ".wasm.br"
+    ];
+
+    foreach (string filename in filenames)
+    {
+      string otherAssemblyFile = System.IO.Path.Combine(projectOutputPath, filename);
+      if (System.IO.File.Exists(otherAssemblyFile))
+      {
+        assemblyFiles.Add(new(reference, filename));
+      }
+    }
+    return assemblyFiles;
   }
 
   /// <summary>
@@ -147,9 +183,18 @@ internal sealed class AddDependenciesToPackage : BaseCommand<AddDependenciesToPa
       foreach (VSLangProj.Reference reference in project.References)
       {
         // find any references that are not part of .net core, are not shipped with Nucleus, and are not already in the manifest
-        if (!reference.Path.StartsWith(DOTNET_INSTALL_PATH, StringComparison.OrdinalIgnoreCase) && !manifestFiles.Where(file => System.IO.Path.GetFileName(file.FileName).Equals(reference.AssemblyFileName(), StringComparison.OrdinalIgnoreCase)).Any() && !IsShippedWithNucleus(reference, nucleusReferencePath))
+        // if (!reference.Path.StartsWith(DOTNET_INSTALL_PATH, StringComparison.OrdinalIgnoreCase) && !manifestFiles.Where(file => GetAssemblyFiles(reference).Contains(System.IO.Path.GetFileName(file.FileName), StringComparer.OrdinalIgnoreCase)).Any() && !IsShippedWithNucleus(reference, nucleusReferencePath))
+        if (!reference.Path.StartsWith(DOTNET_INSTALL_PATH, StringComparison.OrdinalIgnoreCase) && !IsShippedWithNucleus(reference, nucleusReferencePath))
         {
-          return false;
+          // return false if there are any reference assemblies which are not already in the manifest
+          List<Models.ProjectReference> referenceFiles = GetAssemblyFiles(GetProjectOutputPath(project), reference);
+          if (referenceFiles
+            .Any(reference => !manifestFiles.Any(manifestFile => System.IO.Path.GetFileName(manifestFile.FileName).Equals(reference.FileName, StringComparison.OrdinalIgnoreCase))))
+
+          //if (manifestFiles.Any(file => !referenceFiles.Any(referenceFile => referenceFile.FileName.Equals(System.IO.Path.GetFileName(file.FileName), StringComparison.OrdinalIgnoreCase))))
+          {
+            return false;
+          }
         }
       }
     }

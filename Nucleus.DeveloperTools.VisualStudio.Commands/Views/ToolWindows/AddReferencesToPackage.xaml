@@ -18,35 +18,56 @@
   <!--https://stackoverflow.com/questions/3138628/grid-lines-in-wpf-listview-->
   
 
-  <Grid>
+  <Grid Margin="8">
     <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <Label Content="There are no references to add."  Visibility="{Binding IsWarningVisible}" />
+		<Label Grid.Row="0" Content="New References" FontWeight="Bold" />
+    
+    <Label Grid.Row="1" Content="There are no references to add."  Visibility="{Binding IsWarningVisible}" />
 
     <ListView 
+      Grid.Row="1"
       ItemsSource="{Binding NewReferences}" 
-      Padding="8" 
+      Padding="4" 
       Visibility="{Binding IsListVisible}">
       <ListView.View>
         <GridView>
-          <GridViewColumn Header="">
+          <GridViewColumn Header="" Width="30">
             <GridViewColumn.CellTemplate>
               <DataTemplate>
                 <CheckBox IsChecked="{Binding IsSelected}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
-          <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" Width="400" />
+          <GridViewColumn DisplayMemberBinding="{Binding FileName}" Header="Name" Width="400" />
           <GridViewColumn DisplayMemberBinding="{Binding Version}" Header="Version" Width="100" />
         </GridView>
       </ListView.View>
     </ListView>
-    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="8" HorizontalAlignment="Right" >
-      <Button Content="OK" Click="OK_Clicked" Margin="0,0,8,8" />
-      <Button Content="Cancel" Click="Cancel_Clicked" Margin="0,0,8,8" />
+
+    <Label Grid.Row="2" Content="Existing References" FontWeight="Bold" />
+    
+    <ListView 
+      Grid.Row="3"
+      ItemsSource="{Binding ExistingReferences}" 
+      Padding="4" >
+      <ListView.View>
+        <GridView>          
+          <GridViewColumn DisplayMemberBinding="{Binding FileName}" Header="Name" Width="430" />
+          <GridViewColumn DisplayMemberBinding="{Binding Version}" Header="Version" Width="100" />
+        </GridView>
+      </ListView.View>
+    </ListView>
+
+    <StackPanel Orientation="Horizontal" Grid.Row="4" Margin="0,12,0,0" HorizontalAlignment="Right" >
+      <Button Content="OK" Click="OK_Clicked" Margin="0,0,8,0" />
+      <Button Content="Cancel" Click="Cancel_Clicked" />
     </StackPanel>
   </Grid>
 </platform:DialogWindow>
