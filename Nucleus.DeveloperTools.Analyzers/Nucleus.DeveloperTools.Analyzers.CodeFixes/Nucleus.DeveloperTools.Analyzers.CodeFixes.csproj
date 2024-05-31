@@ -5,6 +5,12 @@
     <IsPackable>false</IsPackable>
     <RootNamespace>Nucleus.DeveloperTools.Analyzers</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="license.txt" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" />

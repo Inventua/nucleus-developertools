@@ -27,6 +27,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="license.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="license.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.CodeFixes\Nucleus.DeveloperTools.Analyzers.CodeFixes.csproj" />
     <ProjectReference Include="..\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers\Nucleus.DeveloperTools.Analyzers.csproj" />
   </ItemGroup>

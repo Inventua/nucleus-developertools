@@ -14,7 +14,7 @@ public class AddReferencesToPackage
   public IEnumerable<Models.ProjectReference> ExistingReferences { get; set; }
   public IEnumerable<Models.ProjectReference> NewReferences { get; set; }
 
-  public Visibility IsListVisible 
+  public Visibility IsNewReferencesListVisible 
   { 
     get 
     {
@@ -22,11 +22,27 @@ public class AddReferencesToPackage
     } 
   }
 
-  public Visibility IsWarningVisible
+  public Visibility IsExistingReferencesListVisible
+  {
+    get
+    {
+      return this.ExistingReferences.Any() ? Visibility.Visible : Visibility.Collapsed;
+    }
+  }
+
+  public Visibility IsNewReferencesWarningVisible
   {
     get
     {
       return !this.NewReferences.Any() ? Visibility.Visible : Visibility.Collapsed;
+    }
+  }
+
+  public Visibility IsExistingReferencesWarningVisible
+  {
+    get
+    {
+      return !this.ExistingReferences.Any() ? Visibility.Visible : Visibility.Collapsed;
     }
   }
 }

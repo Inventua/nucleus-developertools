@@ -10,32 +10,32 @@
   mc:Ignorable="d"
   Width="600"
   Height="400"
+  MinHeight="200"
+  MinWidth="300"
   xmlns:viewmodels="clr-namespace:Nucleus.DeveloperTools.VisualStudio.Commands.ViewModels"
   d:DataContext="{d:DesignInstance viewmodels:AddReferencesToPackage}"
   d:DesignHeight="600"
   d:DesignWidth="500"
-  Title="Add References to package.xml">
-  <!--https://stackoverflow.com/questions/3138628/grid-lines-in-wpf-listview-->
-  
+  Title="Add References to package.xml">  
 
   <Grid Margin="8">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Content="New References" FontWeight="Bold" />
     
-    <Label Grid.Row="1" Content="There are no references to add."  Visibility="{Binding IsWarningVisible}" />
+    <Label Grid.Row="1" Content="There are no references to add." Visibility="{Binding IsNewReferencesWarningVisible}" />
 
     <ListView 
       Grid.Row="1"
       ItemsSource="{Binding NewReferences}" 
-      Padding="4" 
-      Visibility="{Binding IsListVisible}">
+      Padding="4"       
+      Visibility="{Binding IsNewReferencesListVisible}">
       <ListView.View>
         <GridView>
           <GridViewColumn Header="" Width="30">
@@ -51,12 +51,13 @@
       </ListView.View>
     </ListView>
 
-    <Label Grid.Row="2" Content="Existing References" FontWeight="Bold" />
-    
+    <Label Grid.Row="2" Content="Existing References" FontWeight="Bold" Margin="0,8,0,0" />
+
+    <Label Grid.Row="3" Content="There are no existing references" Visibility="{Binding IsExistingReferencesWarningVisible}" />
     <ListView 
       Grid.Row="3"
       ItemsSource="{Binding ExistingReferences}" 
-      Padding="4" >
+      Padding="4" Visibility="{Binding IsExistingReferencesListVisible}">
       <ListView.View>
         <GridView>          
           <GridViewColumn DisplayMemberBinding="{Binding FileName}" Header="Name" Width="430" />

@@ -7,8 +7,13 @@
 -->
 <Project>
   <PropertyGroup>
-    <!-- version also has to be updated in source.extension.vsixmanifest -->
-    <VersionPrefix>1.4.0.2</VersionPrefix>
+    <!-- 
+    The version also has to be manually updated in:
+    - source.extension.vsixmanifest 
+    - Nucleus.DeveloperTools.VisualStudio.TemplateWizard\Properties\AssemblyInfo.cs  
+    - Nucleus.DeveloperTools.VisualStudioTemplates\Template Source Code\**\*.vstemplate
+    -->
+    <VersionPrefix>2.0.0.0</VersionPrefix>
     <Authors>Inventua Pty Ltd</Authors>
     <Product>Nucleus</Product>
     <Copyright>(c) Inventua Pty Ptd</Copyright>
