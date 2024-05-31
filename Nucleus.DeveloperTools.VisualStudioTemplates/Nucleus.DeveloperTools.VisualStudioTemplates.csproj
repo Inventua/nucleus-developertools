@@ -111,7 +111,7 @@
 
   <PropertyGroup Label="Signing (strong name)">
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>Nucleus.DeveloperTools.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Nucleus.DeveloperTools.Vsix\Nucleus.DeveloperTools.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
