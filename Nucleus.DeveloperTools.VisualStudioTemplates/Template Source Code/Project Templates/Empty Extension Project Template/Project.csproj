@@ -6,22 +6,36 @@
 		<RootNamespace>$nucleus.extension.namespace$</RootNamespace>
 		<EnableDefaultContentItems>false</EnableDefaultContentItems>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <!-- 
+      Set RazorCompileOnBuild to true if you want your views to be compiled into your assembly (improves first-time view performance). .cshtml files 
+      do not need to be included in package.xml or in the install zip when RazorCompileOnBuild=true.  Set RazorCompileOnBuild to false 
+      if you want your views to be compiled at run time.  When RazorCompileOnBuild=false, .cshtml files must be included in package.xml and in your 
+      install zip.
+    -->
+    <RazorCompileOnBuild>true</RazorCompileOnBuild>
+
+    <!-- 
+      Set GenerateEmbeddedFilesManifest to true to generate an embedd files manifest.  If you set this and also set your static resources (css/js) Build
+      Action to "Embedded resource" they are embedded in your assembly, and do not need to be  included in package.xml and in your install zip.  If you 
+      prefer to include your static resource files in the install set, set their Build Action to "Content" and include them in package.xml.  You can 
+      leave GenerateEmbeddedFilesManifest set to true and use a combination of build actions for different files if you want to.
+    -->
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
-<ItemGroup>
+  <ItemGroup>
 		<None Remove="**\*.vspscc" />
 		<None Remove="**\*.scc" />
 		<None Remove="*.zip" />
 	</ItemGroup>
 
   <ItemGroup>
-    <Content Include="**\*.css" />
-    <Content Include="**\*.js" />
+    <EmbeddedResource Include="**\*.css" />
+    <EmbeddedResource Include="**\*.js" />
     <Content Include="**\*.cshtml" />
   </ItemGroup>
   

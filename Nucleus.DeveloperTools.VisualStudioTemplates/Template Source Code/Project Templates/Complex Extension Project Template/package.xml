@@ -20,18 +20,25 @@
 			</moduleDefinition>
 
 			<file name="readme.txt" />
-			<file name="viewer.css" />
-			<file name="settings.css" />
+      <!-- 
+        when the project property GenerateEmbeddedFilesManifest=true and your static resources Build Action=Embedded resource, static resource
+        files do not need to be included in package.xml (this file) 
+      -->      
+			<!--<file name="viewer.css" />
+			<file name="settings.css" />-->
 			
 			<folder name="bin">
 				<file name="$nucleus.extension.namespace$.dll" />
 			</folder>
-			
-			<folder name="Views">
+
+      <!-- 
+        when the project property RazorCompileOnBuild=true view (.cshtml) files do not need to be included in package.xml (this file) 
+      -->
+      <!--<folder name="Views">
 				<file name="_ViewImports.cshtml" />
 				<file name="Viewer.cshtml" />
 				<file name="Settings.cshtml" />
-			</folder>
+			</folder>-->
 			
 		</component>
 	</components>
