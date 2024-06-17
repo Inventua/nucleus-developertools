@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using System.Xml;
 using Nucleus.DeveloperTools.MSBuild.Properties;
 using Microsoft.Build.Framework;
 using Nucleus.DeveloperTools.Shared;
+using System.Reflection;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Utilities;
 
 namespace Nucleus.DeveloperTools.MSBuild
 {
@@ -22,6 +22,9 @@ namespace Nucleus.DeveloperTools.MSBuild
     [Required]
     public ITaskItem[] ProjectEmbedded { get; set; }
 
+    [Required]
+    public Boolean RazorCompileOnBuild { get; set; }
+
     // these are file types which do not need to be included in package.xml but may be set as "content"
     private static string[] CONTENT_EXCLUDED_FILETYPES = { ".razor" };
 
@@ -32,9 +35,16 @@ namespace Nucleus.DeveloperTools.MSBuild
       List<string> projectContent = this.ProjectContent.Select(item => item.ToString()).ToList();
       List<string> projectEmbedded = this.ProjectEmbedded.Select(item => item.ToString()).ToList();
 
+      // if the project RazorCompileOnBuild property is true, Razor content is compiled into the assembly and does not need to be in package.xml
+      //Boolean razorCompileOnBuild = this.BuildEngine9.GetGlobalProperties()
+      //  .Where(prop => prop.Key == "RazorCompileOnBuild")
+      //  .Select(prop => TryParseBoolean(prop.Value, false))
+      //  .FirstOrDefault();
+
       // check for content files which are in the project, but not in the package
       foreach (string missingItem in projectContent
         .Where(item => !CONTENT_EXCLUDED_FILETYPES.Contains(System.IO.Path.GetExtension(item)))
+        .Where(item => !(System.IO.Path.GetExtension(item) == ".cshtml" && this.RazorCompileOnBuild))
         .Where(item => !packageContent.Where(packageItem => packageItem.FileName.Equals(item, StringComparison.OrdinalIgnoreCase))
         .Any()))
       {
@@ -55,6 +65,16 @@ namespace Nucleus.DeveloperTools.MSBuild
       }
 
       return true;
+    }
+
+
+    private static Boolean TryParseBoolean(string value, Boolean defaultValue)
+    {
+      if (Boolean.TryParse(value, out Boolean result))
+      {
+        return result;
+      }
+      return defaultValue;
     }
   }
 }
