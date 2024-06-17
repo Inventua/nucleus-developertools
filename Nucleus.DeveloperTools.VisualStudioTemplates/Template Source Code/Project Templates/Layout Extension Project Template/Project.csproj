@@ -20,12 +20,10 @@
 
     <!-- 
       Set GenerateEmbeddedFilesManifest to true to generate an embedd files manifest.  If you set this and also set your static resources (css/js) Build
-      Action to "Embedded resource" they are embedded in your assembly, and do not need to be  included in package.xml and in your install zip.  If you 
-      prefer to include your static resource files in the install set, set their Build Action to "Content" and include them in package.xml.  You can 
+      Action to "Embedded resource" they are embedded in your assembly, and do not need to be  included in package.xml and in your install zip.  To
+      use GenerateEmbeddedFilesManifest, you must also include a PackageReference to Microsoft.Extensions.FileProviders.Embedded. 
+      If you prefer to include your static resource files in the install set, set their Build Action to "Content" and include them in package.xml.  You can 
       leave GenerateEmbeddedFilesManifest set to true and use a combination of build actions for different files if you want to.
-      
-      For layout/container projects, we default this setting to false because it is common to include static resources in the install set 
-      so that end users can make changes to layouts and containers.
     -->
     <GenerateEmbeddedFilesManifest>false</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
