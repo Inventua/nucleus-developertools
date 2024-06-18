@@ -27,6 +27,9 @@ namespace Nucleus.DeveloperTools.MSBuild
 
     // these are file types which do not need to be included in package.xml but may be set as "content"
     private static string[] CONTENT_EXCLUDED_FILETYPES = { ".razor" };
+    
+    // these are file names which do not need to be included in package.xml but may be set as "content"
+    private static string[] CONTENT_EXCLUDED_FILENAMES = { "_ViewImports.cshtml" };
 
     public override bool Execute()
     {
@@ -36,14 +39,11 @@ namespace Nucleus.DeveloperTools.MSBuild
       List<string> projectEmbedded = this.ProjectEmbedded.Select(item => item.ToString()).ToList();
 
       // if the project RazorCompileOnBuild property is true, Razor content is compiled into the assembly and does not need to be in package.xml
-      //Boolean razorCompileOnBuild = this.BuildEngine9.GetGlobalProperties()
-      //  .Where(prop => prop.Key == "RazorCompileOnBuild")
-      //  .Select(prop => TryParseBoolean(prop.Value, false))
-      //  .FirstOrDefault();
 
       // check for content files which are in the project, but not in the package
       foreach (string missingItem in projectContent
-        .Where(item => !CONTENT_EXCLUDED_FILETYPES.Contains(System.IO.Path.GetExtension(item)))
+        .Where(item => !CONTENT_EXCLUDED_FILETYPES.Contains(System.IO.Path.GetExtension(item), StringComparer.OrdinalIgnoreCase))
+        .Where(item => !CONTENT_EXCLUDED_FILENAMES.Contains(System.IO.Path.GetFileName(item), StringComparer.OrdinalIgnoreCase))
         .Where(item => !(System.IO.Path.GetExtension(item) == ".cshtml" && this.RazorCompileOnBuild))
         .Where(item => !packageContent.Where(packageItem => packageItem.FileName.Equals(item, StringComparison.OrdinalIgnoreCase))
         .Any()))
