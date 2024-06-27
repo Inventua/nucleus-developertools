@@ -13,7 +13,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.Commands;
 internal sealed class AddDependenciesToPackage : BaseCommand<AddDependenciesToPackage>
 {
   private const string MANIFEST_FILENAME = "package.xml";
-  private static readonly string[] NUCLEUS_REFERENCE_SEARCH_PATHS = ["", "bin\\{environment}"];
+  private static readonly string[] NUCLEUS_REFERENCE_SEARCH_PATHS = ["", "bin\\", "bin\\{environment}"];
   private const string NUCLEUS_PATH_ENV_VARIABLE = "NUCLEUS_PATH";
   private const string NUCLEUS_MAIN_ASSEMBLY_NAME = "Nucleus.Web.dll";
   private const string DOTNET_INSTALL_PATH = "C:\\Program Files\\dotnet\\packs\\";
