@@ -137,6 +137,12 @@ internal static class DteExtensions
         }
         else if (Guid.Parse(selectedItem.ProjectItem.Kind) == PhysicalFile_guid)
         {
+          // This code is for future reference. At present, we display the "Add to package.xml" command without checking build type, so
+          // it is present when static resources are embedded (build action=embedded). If we want to change this in future, we can check
+          // the build action using the code below.
+          //VSLangProj.prjBuildAction buildAction = (VSLangProj.prjBuildAction)selectedItem.ProjectItem.Properties.Item("BuildAction").Value;
+          //if (buildAction == VSLangProj.prjBuildAction.prjBuildActionContent)
+          //{ }
           results.Add(GetRelativePath(selectedItem.ProjectItem, projectPath));
         }
       }
