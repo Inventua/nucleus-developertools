@@ -15,7 +15,7 @@
     <RazorCompileOnBuild>true</RazorCompileOnBuild>
 
     <!-- 
-      Set GenerateEmbeddedFilesManifest to true to generate an embedd files manifest.  If you set this and also set your static resources (css/js) Build
+      Set GenerateEmbeddedFilesManifest to true to generate an embedded files manifest.  If you set this and also set your static resources (css/js) Build
       Action to "Embedded resource" they are embedded in your assembly, and do not need to be  included in package.xml and in your install zip.  To
       use GenerateEmbeddedFilesManifest, you must also include a PackageReference to Microsoft.Extensions.FileProviders.Embedded. 
       If you prefer to include your static resource files in the install set, set their Build Action to "Content" and include them in package.xml.  You can 
