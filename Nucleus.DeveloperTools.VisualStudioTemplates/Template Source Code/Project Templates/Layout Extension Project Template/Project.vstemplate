@@ -38,7 +38,7 @@
   </TemplateContent>
 
   <WizardExtension>
-    <Assembly>Nucleus.DeveloperTools.VisualStudio.TemplateWizard, Version=2.0.0.0, Culture=Neutral, PublicKeyToken=2cc815f0f52d0477</Assembly>
+    <Assembly>Nucleus.DeveloperTools.VisualStudio.TemplateWizard, Version=3.0.0.0, Culture=Neutral, PublicKeyToken=2cc815f0f52d0477</Assembly>
     <FullClassName>Nucleus.DeveloperTools.VisualStudio.TemplateWizard.ProjectWizard</FullClassName>
   </WizardExtension>
 
