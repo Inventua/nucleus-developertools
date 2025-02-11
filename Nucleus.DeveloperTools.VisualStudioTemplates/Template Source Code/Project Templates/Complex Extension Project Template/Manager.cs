@@ -26,26 +26,26 @@ namespace $nucleus.extension.namespace$
 		}
 
 		/// <summary>
-		/// Create a new <see cref="$nucleus.extension.model_class_name$"/> with default values.
+		/// Create a new <see cref="$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$"/> with default values.
 		/// </summary>
 		/// <param name="site"></param>
 		/// <returns></returns>
 		/// <remarks>
-		/// The new <see cref="$nucleus.extension.model_class_name$"/> is not saved to the database until you call <see cref="Save(PageModule, $nucleus.extension.model_class_name$)"/>.
+		/// The new <see cref="$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$"/> is not saved to the database until you call <see cref="Save(PageModule, $nucleus.extension.model_class_name$)"/>.
 		/// </remarks>
-		public $nucleus.extension.model_class_name$ CreateNew()
-		{
-			$nucleus.extension.model_class_name$ result = new();
+		public $nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$ CreateNew()
+{
+			$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$ result = new();
 
 			return result;
 		}
 
 		/// <summary>
-		/// Retrieve an existing <see cref="$nucleus.extension.model_class_name$"/> from the database.
+		/// Retrieve an existing <see cref="$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$"/> from the database.
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public async Task<$nucleus.extension.model_class_name$> Get(Guid id)
+		public async Task<$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$> Get(Guid id)
 		{
 			return await this.CacheManager.$nucleus.extension.model_class_name$sCache().GetAsync(id, async id =>
 			{
@@ -57,10 +57,10 @@ namespace $nucleus.extension.namespace$
 		}
 
 		/// <summary>
-		/// Delete the specified <see cref="$nucleus.extension.model_class_name$"/> from the database.
+		/// Delete the specified <see cref="$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$"/> from the database.
 		/// </summary>
 		/// <param name="$nucleus.extension.model_class_name$"></param>
-		public async Task Delete($nucleus.extension.model_class_name$ $nucleus.extension.model_class_name.camelcase$)
+		public async Task Delete($nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$ $nucleus.extension.model_class_name.camelcase$)
 		{
 			using (I$nucleus.extension.name$DataProvider provider = this.DataProviderFactory.CreateProvider<I$nucleus.extension.name$DataProvider>())
 			{
@@ -70,11 +70,11 @@ namespace $nucleus.extension.namespace$
 		}
 
 		/// <summary>
-		/// List all <see cref="$nucleus.extension.model_class_name$"/>s within the specified site.
+		/// List all <see cref="$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$"/>s within the specified site.
 		/// </summary>
 		/// <param name="module"></param>
 		/// <returns></returns>
-		public async Task<IList<$nucleus.extension.model_class_name$>> List(PageModule module)
+		public async Task<IList<$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$>> List(PageModule module)
 		{
 			using (I$nucleus.extension.name$DataProvider provider = this.DataProviderFactory.CreateProvider<I$nucleus.extension.name$DataProvider>())
 			{
@@ -83,11 +83,11 @@ namespace $nucleus.extension.namespace$
 		}
 
 		/// <summary>
-		/// Create or update a <see cref="$nucleus.extension.model_class_name$"/>.
+		/// Create or update a <see cref="$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$"/>.
 		/// </summary>
 		/// <param name="module"></param>
-		/// <param name="$nucleus.extension.model_class_name$"></param>
-		public async Task Save(PageModule module, $nucleus.extension.model_class_name$ $nucleus.extension.model_class_name.camelcase$)
+		/// <param name="$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$"></param>
+		public async Task Save(PageModule module, $nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$ $nucleus.extension.model_class_name.camelcase$)
 		{
 			using (I$nucleus.extension.name$DataProvider provider = this.DataProviderFactory.CreateProvider<I$nucleus.extension.name$DataProvider>())
 			{

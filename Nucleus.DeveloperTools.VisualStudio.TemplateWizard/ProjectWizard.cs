@@ -158,7 +158,18 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
             replacementsDictionary.Add("$nucleus.extension.description$", projectOptionsForm.ExtensionDescription);
 						replacementsDictionary.Add("$nucleus.extension.friendlyname$", projectOptionsForm.FriendlyName);
 
-						replacementsDictionary.Add("$nucleus.extension.model_class_name$", projectOptionsForm.ModelClassName);
+            // If the user selects a model name which matches the end of the namespace, add a "Models" prefix to the
+            // model name so that the compiler can defferentiate between the model class name and the namespace.
+            if (projectOptionsForm.ExtensionNamespace.EndsWith(projectOptionsForm.ModelClassName))
+            {
+              replacementsDictionary.Add("$nucleus.extension.model_class_namespace$", "Models.");
+            }
+            else
+            {
+              replacementsDictionary.Add("$nucleus.extension.model_class_namespace$", "");
+            }
+
+            replacementsDictionary.Add("$nucleus.extension.model_class_name$", projectOptionsForm.ModelClassName);
 						replacementsDictionary.Add("$nucleus.extension.model_class_name.camelcase$", projectOptionsForm.ModelClassName.ToCamelCase());
             replacementsDictionary.Add("$nucleus.extension.model_class_name.lowercase$", projectOptionsForm.ModelClassName.ToLower());
 

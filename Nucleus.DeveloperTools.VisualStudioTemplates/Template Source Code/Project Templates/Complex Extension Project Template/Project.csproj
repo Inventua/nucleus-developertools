@@ -6,6 +6,7 @@
 		<RootNamespace>$nucleus.extension.namespace$</RootNamespace>
 		<EnableDefaultContentItems>false</EnableDefaultContentItems>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <AssemblyName>$nucleus.extension.namespace$</AssemblyName>
     
     <!-- 
       Set RazorCompileOnBuild to true if you want your views to be compiled into your assembly (improves first-time view performance). .cshtml files 

@@ -174,12 +174,7 @@ namespace Nucleus.DeveloperTools.VisualStudio.TemplateWizard
 
     private void cmdNext_Click(object sender, EventArgs e)
     {
-      // If the user selects a model name which matches the end of the namespace, add a "Models" prefix to the
-      // model name so that the compiler can defferentiate between the model class name and the namespace.
-      if (this.txtExtensionNamespace.Text.EndsWith(this.txtModelName.Text))
-      {
-        this.txtModelName.Text = $"Models.{this.txtModelName.Text}";
-      }
+      
     }
 
     private void txtExtensionName_Validating(object sender, CancelEventArgs e)

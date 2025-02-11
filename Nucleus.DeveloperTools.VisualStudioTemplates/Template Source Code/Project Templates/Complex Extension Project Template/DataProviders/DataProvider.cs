@@ -29,7 +29,7 @@ namespace $nucleus.extension.namespace$.DataProviders
 			this.Context = context;
 		}
 
-		public async Task<$nucleus.extension.model_class_name$> Get(Guid id)
+		public async Task<$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$> Get(Guid id)
 		{
 			return await this.Context.$nucleus.extension.model_class_name$s
 				.Where($nucleus.extension.model_class_name.camelcase$ => $nucleus.extension.model_class_name.camelcase$.Id == id)
@@ -37,7 +37,7 @@ namespace $nucleus.extension.namespace$.DataProviders
 				.FirstOrDefaultAsync();
 		}
 
-		public async Task<IList<$nucleus.extension.model_class_name$>> List(PageModule pageModule)
+		public async Task<IList<$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$>> List(PageModule pageModule)
 		{
 			return await this.Context.$nucleus.extension.model_class_name$s
 				.Where($nucleus.extension.model_class_name.camelcase$ => EF.Property<Guid>($nucleus.extension.model_class_name.camelcase$, "ModuleId") == pageModule.Id)
@@ -46,7 +46,7 @@ namespace $nucleus.extension.namespace$.DataProviders
 				.ToListAsync();
 		}
 
-		public async Task Save(PageModule pageModule, $nucleus.extension.model_class_name$ $nucleus.extension.model_class_name.camelcase$)
+		public async Task Save(PageModule pageModule, $nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$ $nucleus.extension.model_class_name.camelcase$)
 		{
 			Action raiseEvent;
 
@@ -61,12 +61,12 @@ namespace $nucleus.extension.namespace$.DataProviders
 			if (isNew)
 			{
 				this.Context.Entry($nucleus.extension.model_class_name.camelcase$).State = EntityState.Added;
-				raiseEvent = new(() => { this.EventManager.RaiseEvent<$nucleus.extension.model_class_name$, Create >($nucleus.extension.model_class_name.camelcase$); });
+				raiseEvent = new(() => { this.EventManager.RaiseEvent<$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$, Create >($nucleus.extension.model_class_name.camelcase$); });
 			}
 			else
 			{
 				this.Context.Entry($nucleus.extension.model_class_name.camelcase$).State = EntityState.Modified;
-				raiseEvent = new(() => { this.EventManager.RaiseEvent<$nucleus.extension.model_class_name$, Update>($nucleus.extension.model_class_name.camelcase$); });
+				raiseEvent = new(() => { this.EventManager.RaiseEvent<$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$, Update>($nucleus.extension.model_class_name.camelcase$); });
 			}
 
 			await this.Context.SaveChangesAsync();
@@ -74,10 +74,10 @@ namespace $nucleus.extension.namespace$.DataProviders
 			raiseEvent.Invoke();
 		}
 
-		public async Task Delete($nucleus.extension.model_class_name$ $nucleus.extension.model_class_name.camelcase$)
+		public async Task Delete($nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$ $nucleus.extension.model_class_name.camelcase$)
 		{
 			this.Context.Remove($nucleus.extension.model_class_name.camelcase$);
-			await this.Context.SaveChangesAsync<$nucleus.extension.model_class_name$>();
+			await this.Context.SaveChangesAsync<$nucleus.extension.model_class_namespace$$nucleus.extension.model_class_name$>();
 		}
 	}
 }

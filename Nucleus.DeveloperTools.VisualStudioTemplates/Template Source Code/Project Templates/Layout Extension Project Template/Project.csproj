@@ -5,6 +5,8 @@
 		<DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
 		<EnableDefaultContentItems>false</EnableDefaultContentItems>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <AssemblyName>$nucleus.extension.namespace$</AssemblyName>
+    
     <!-- 
       Set RazorCompileOnBuild to true if you want your views to be compiled into your assembly (improves first-time view performance). .cshtml files 
       do not need to be included in package.xml or in the install zip when RazorCompileOnBuild=true.  Set RazorCompileOnBuild to false 
